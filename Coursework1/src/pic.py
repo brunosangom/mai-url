@@ -4,7 +4,7 @@ from sklearn.neighbors import NearestNeighbors
 from numpy.linalg import solve
 import math
 
-class PICClustering(BaseEstimator, ClusterMixin):
+class PIC(BaseEstimator, ClusterMixin):
     def __init__(self, n_clusters=2, k=10, a=0.95, z=0.01):
         """
         Parameters:
