@@ -3,6 +3,7 @@ from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.neighbors import NearestNeighbors
 from numpy.linalg import solve
 import math
+import time
 
 class PIC(BaseEstimator, ClusterMixin):
     def __init__(self, n_clusters=2, k=10, a=0.95, z=0.01):
@@ -36,7 +37,7 @@ class PIC(BaseEstimator, ClusterMixin):
         for i in range(n_samples):
             # skip the first neighbor (itself)
             for j, d in zip(indices[i, 1:], distances[i, 1:]):
-                W[i, j] = np.exp(- (d**2) / s2)
+                W[i, j] = np.exp( (d**2) / s2) # @todo np.exp(- (d**2) / s2) ??
         # Compute transition matrix P = D^-1 W
         D = np.sum(W, axis=1)
         # Avoid division by zero
