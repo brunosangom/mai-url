@@ -169,11 +169,8 @@ class PIC(BaseEstimator, ClusterMixin):
         self.P_ = self._build_graph(X)
         # Initial clusters from nearest neighbor merging.
         clusters = self._initial_clusters(X)
-        # Iteratively merge clusters until reaching desired number.
-        while len(clusters) > self.n_clusters:
-            clusters, affinity = self._merge_clusters(clusters, self.P_)
-            if affinity is None:
-                break  # no more merges possible
+        # Merge clusters until reaching desired number.
+        clusters, _ = self._merge_clusters(clusters, self.P_)
         # Create labels for training samples.
         self.labels_ = -np.ones(X.shape[0], dtype=int)
         for label, cluster in enumerate(clusters):
@@ -181,7 +178,7 @@ class PIC(BaseEstimator, ClusterMixin):
                 self.labels_[idx] = label
         # For predict, we compute centroids (here using Euclidean mean).
         self.cluster_centers_ = np.array([np.mean(X[self.labels_ == l], axis=0) 
-                                            for l in range(self.n_clusters)])
+                                        for l in range(self.n_clusters)])
         return self
 
     def predict(self, X):
