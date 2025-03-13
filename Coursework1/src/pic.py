@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.neighbors import NearestNeighbors
 from numpy.linalg import solve
+import heapq
 import math
 import time
 
@@ -105,31 +106,63 @@ class PIC(BaseEstimator, ClusterMixin):
         return S_cond
 
     def _merge_clusters(self, clusters, P):
-        best_affinity = -np.inf
-        merge_pair = None
-        # Try all pairs (naively)
+        # Priority queue (max heap, store negative affinities to simulate max-heap)
+        heap = []
+        
+        # Compute initial affinities for all pairs
         for i in range(len(clusters)):
             for j in range(i+1, len(clusters)):
-                Ca = clusters[i]
-                Cb = clusters[j]
+                Ca, Cb = clusters[i], clusters[j]
                 union = sorted(set(Ca) | set(Cb))
-                SA = self._compute_S(P, Ca)
-                SB = self._compute_S(P, Cb)
+                SA, SB = self._compute_S(P, Ca), self._compute_S(P, Cb)
                 SA_cond = self._compute_S_cond(P, Ca, union)
                 SB_cond = self._compute_S_cond(P, Cb, union)
                 affinity = (SA_cond - SA) + (SB_cond - SB)
-                if affinity > best_affinity:
-                    best_affinity = affinity
-                    merge_pair = (i, j)
-        if merge_pair is not None:
-            i, j = merge_pair
+                heapq.heappush(heap, (-affinity, i, j))  # Max heap (store negative values)
+
+        # Keep track of active clusters
+        active_clusters = list(range(len(clusters)))
+        last_best_affinity = None
+        
+        while len(active_clusters) > self.n_clusters and heap:
+            # Get the best pair to merge
+            best_affinity, i, j = heapq.heappop(heap)
+            best_affinity = -best_affinity  # Convert back to positive
+            
+            # Check if both clusters are still active
+            if i not in active_clusters or j not in active_clusters:
+                continue  # Skip this pair, as one or both clusters have been merged
+            
+            # Merge clusters i and j
             new_cluster = list(set(clusters[i]) | set(clusters[j]))
-            # Remove the two clusters and add the merged one.
-            new_clusters = [clusters[k] for k in range(len(clusters)) if k not in (i, j)]
-            new_clusters.append(new_cluster)
-            return new_clusters, best_affinity
-        else:
-            return clusters, None
+            clusters.append(new_cluster)
+            
+            # Update active clusters
+            new_index = len(clusters) - 1
+            active_clusters.remove(i)
+            active_clusters.remove(j)
+            active_clusters.append(new_index)
+            
+            last_best_affinity = best_affinity
+            
+            # Update heap with new affinities involving the merged cluster
+            for k in active_clusters:
+                if k == new_index:
+                    continue
+                Ck = clusters[k]
+                union = sorted(set(Ck) | set(new_cluster))
+                Sk = self._compute_S(P, Ck)
+                S_new = self._compute_S(P, new_cluster)
+                Sk_cond = self._compute_S_cond(P, Ck, union)
+                S_new_cond = self._compute_S_cond(P, new_cluster, union)
+                affinity = (Sk_cond - Sk) + (S_new_cond - S_new)
+                heapq.heappush(heap, (-affinity, k, new_index))
+        
+        # Return only the active clusters
+        result_clusters = [clusters[i] for i in active_clusters]
+        
+        return result_clusters, last_best_affinity
+
 
     def fit(self, X, y=None):
         X = np.asarray(X)
