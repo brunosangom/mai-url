@@ -266,11 +266,11 @@ def evaluate_clustering_algorithms(X, y_true, n_clusters, y_pred_pic):
     results['Algorithm'].append('PIC')
     results['NMI'].append(nmi_pic)
     results['CE'].append(ce_pic)
-    print(f"PIC: NMI = {nmi_pic:.4f}, CE = {ce_pic:.4f}")
+    # print(f"PIC: NMI = {nmi_pic:.4f}, CE = {ce_pic:.4f}")
     
     # Evaluate all other algorithms
     for name, algo in algorithms.items():
-        print(f"Running {name}...")
+        # print(f"Running {name}...")
         try:
             y_pred = algo()
             nmi = normalized_mutual_info_score(y_true, y_pred)
