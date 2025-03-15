@@ -7,7 +7,7 @@ import math
 import time
 
 class PIC(BaseEstimator, ClusterMixin):
-    def __init__(self, n_clusters=2, k=10, a=0.95, z=0.01):
+    def __init__(self, n_clusters, k=20, a=0.95, z=0.01):
         """
         Parameters:
           n_clusters: desired number of clusters.
@@ -28,7 +28,7 @@ class PIC(BaseEstimator, ClusterMixin):
         # Exclude self (first column)
         d3 = distances_3[:, 1:]
         avg_sq = np.mean(d3**2)
-        s2 = avg_sq / (-np.log(self.a) + 1e-10)
+        s2 = avg_sq / (-np.log(self.a))
         
         # Use k nearest neighbors for graph construction.
         nn = NearestNeighbors(n_neighbors=min(self.k + 1, n_samples)).fit(X)
@@ -38,7 +38,7 @@ class PIC(BaseEstimator, ClusterMixin):
         for i in range(n_samples):
             # skip the first neighbor (itself)
             for j, d in zip(indices[i, 1:], distances[i, 1:]):
-                W[i, j] = np.exp( (d**2) / s2) # @todo np.exp(- (d**2) / s2) ??
+                W[i, j] = np.exp(- (d**2) / s2)
         # Compute transition matrix P = D^-1 W
         D = np.sum(W, axis=1)
         # Avoid division by zero
@@ -109,6 +109,8 @@ class PIC(BaseEstimator, ClusterMixin):
         # Priority queue (max heap, store negative affinities to simulate max-heap)
         heap = []
         
+        # start_time = time.time()
+        
         # Compute initial affinities for all pairs
         for i in range(len(clusters)):
             for j in range(i+1, len(clusters)):
@@ -119,11 +121,16 @@ class PIC(BaseEstimator, ClusterMixin):
                 SB_cond = self._compute_S_cond(P, Cb, union)
                 affinity = (SA_cond - SA) + (SB_cond - SB)
                 heapq.heappush(heap, (-affinity, i, j))  # Max heap (store negative values)
+        
+        # end_time = time.time()
+        # print(f"Time taken for initial affinity computation: {end_time - start_time} seconds")
 
         # Keep track of active clusters
         active_clusters = list(range(len(clusters)))
         last_best_affinity = None
         
+        # start_time = time.time()
+
         while len(active_clusters) > self.n_clusters and heap:
             # Get the best pair to merge
             best_affinity, i, j = heapq.heappop(heap)
@@ -158,6 +165,9 @@ class PIC(BaseEstimator, ClusterMixin):
                 affinity = (Sk_cond - Sk) + (S_new_cond - S_new)
                 heapq.heappush(heap, (-affinity, k, new_index))
         
+        # end_time = time.time()
+        # print(f"Time taken for cluster merging computation: {end_time - start_time} seconds")
+
         # Return only the active clusters
         result_clusters = [clusters[i] for i in active_clusters]
         
@@ -188,4 +198,8 @@ class PIC(BaseEstimator, ClusterMixin):
         return labels
 
     def fit_predict(self, X, y=None):
-        return self.fit(X, y).labels_
+        start_time = time.time()
+        labels = self.fit(X, y).labels_
+        end_time = time.time()
+        print(f"Totoal time taken for fit_predict: {end_time - start_time} seconds")
+        return labels
