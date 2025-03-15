@@ -72,7 +72,7 @@ def synthetic_dataset_2(cluster_density=0.75, random_state=42):
     return X, Y
 
 def synthetic_dataset_3(cluster_density=0.75, random_state=42):
-    n_samples = int(500*cluster_density)
+    n_samples = int(400*cluster_density)
     
     # Generate two dense clusters
     X1, _ = make_blobs(n_samples=n_samples*2, centers=[[-0.5, 0]], cluster_std=0.05, random_state=random_state)
@@ -81,6 +81,14 @@ def synthetic_dataset_3(cluster_density=0.75, random_state=42):
     # Generate sparse noise around
     np.random.seed(random_state)
     X_noise = np.random.uniform(-1, 1, (n_samples, 2))
+
+    # Remove points inside the circumferences centered at X1 with radius 0.25
+    distance_from_X1 = np.sqrt(np.sum((X_noise - [-0.5, 0])**2, axis=1))
+    X_noise = X_noise[distance_from_X1 > 0.25]
+
+    # Remove points inside the circumferences centered at X1 with radius 0.25
+    distance_from_X2 = np.sqrt(np.sum((X_noise - [0.5, 0])**2, axis=1))
+    X_noise = X_noise[distance_from_X2 > 0.25]
 
     # Assign labels to each cluster
     y1 = np.zeros(X1.shape[0])

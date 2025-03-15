@@ -102,7 +102,7 @@ class PIC(BaseEstimator, ClusterMixin):
             y = solve(I - self.z * P_sub, b)
         except np.linalg.LinAlgError:
             y = np.linalg.lstsq(I - self.z * P_sub, b, rcond=None)[0]
-        S_cond = np.sum(y) / (len(cluster_indices)**2)
+        S_cond = np.sum(b*y) / (len(cluster_indices)**2)
         return S_cond
 
     def _merge_clusters(self, clusters, P):
@@ -201,5 +201,5 @@ class PIC(BaseEstimator, ClusterMixin):
         start_time = time.time()
         labels = self.fit(X, y).labels_
         end_time = time.time()
-        print(f"Totoal time taken for fit_predict: {end_time - start_time} seconds")
+        print(f"Total time taken for fit_predict: {end_time - start_time} seconds")
         return labels
