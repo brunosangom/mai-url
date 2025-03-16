@@ -1,0 +1,11 @@
+## Difficulties Encountered
+- No indication as to how to generate the synthetic datasets.
+  - It required tuning of the datasets in order to get the algorithm to display the behavior described in the paper
+- Difficult to find implementations of all 11 algorithms with which PIC is compared in the paper
+  - Had to implement some of them (LLM)
+- FRGC-T is not available for public access and PubFig is no longer available at all.
+- USPS does not have the number of samples indicated in the paper (9298 instead of 11000)
+- Unclear preprocessing pipeline for Caltech-256's images.
+  - Paper states that dimensionality is 4200, but not all images are of the same size
+  - If a resize was used, its dimensions are not stated anywhere in the paper
+    - Greyscale and 60x70 was assumed
