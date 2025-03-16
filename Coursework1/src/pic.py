@@ -201,5 +201,5 @@ class PIC(BaseEstimator, ClusterMixin):
         start_time = time.time()
         labels = self.fit(X, y).labels_
         end_time = time.time()
-        print(f"Total time taken for fit_predict: {end_time - start_time} seconds")
+        print(f"Time taken for PIC fit_predict: {end_time - start_time} seconds")
         return labels

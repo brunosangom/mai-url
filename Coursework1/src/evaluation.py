@@ -1,11 +1,13 @@
+import os
 import numpy as np
-from scipy.optimize import linear_sum_assignment
 import pandas as pd
+import networkx as nx
+import matplotlib.pyplot as plt
 from sklearn.cluster import AgglomerativeClustering, KMeans, AffinityPropagation, SpectralClustering
 from sklearn.metrics import normalized_mutual_info_score
 from sklearn.metrics.pairwise import rbf_kernel, euclidean_distances
 from sklearn.neighbors import kneighbors_graph
-import networkx as nx
+from scipy.optimize import linear_sum_assignment
 from scipy.sparse.csgraph import laplacian
 from scipy.linalg import eigh
 
@@ -290,3 +292,51 @@ def evaluate_clustering_algorithms(X, y_true, n_clusters, y_pred_pic):
     # Create and return DataFrame
     results_df = pd.DataFrame(results)
     return results_df
+
+
+def plot_clustering_algorithms(X, y_true, n_clusters, y_pred_pic, plots_path):
+    """Plot all clustering algorithms and save their results in files."""
+    
+    algorithms = {
+        'k-med': lambda: k_medoids(X, n_clusters),
+        'A-link': lambda: average_linkage(X, n_clusters),
+        'S-link': lambda: single_linkage(X, n_clusters),
+        'C-link': lambda: complete_linkage(X, n_clusters),
+        'AP': lambda: affinity_propagation(X),
+        'NCuts': lambda: normalized_cuts(X, n_clusters),
+        'NJW': lambda: njw_algorithm(X, n_clusters),
+        'CT': lambda: commute_time_clustering(X, n_clusters),
+        'Zell': lambda: zeta_function_clustering(X, n_clusters, z=0.01),
+        'C-kernel': lambda: connectivity_kernel_clustering(X, n_clusters),
+        'D-kernel': lambda: diffusion_kernel_clustering(X, n_clusters, alpha=0.95, z=0.01)
+    }
+    
+    os.makedirs(plots_path, exist_ok=True)
+
+    # Plot ground truth
+    plt.figure()
+    plt.scatter(X[:, 0], X[:, 1], c=y_true, cmap='viridis', s=20)
+    plt.title('Ground Truth')
+    plt.savefig(os.path.join(plots_path, 'GT_clustering.png'))
+    plt.close()
+
+    # Plot PIC results
+    nmi_pic = normalized_mutual_info_score(y_true, y_pred_pic)
+    plt.figure()
+    plt.scatter(X[:, 0], X[:, 1], c=y_pred_pic, cmap='viridis', s=20)
+    plt.title(f'PIC ({nmi_pic})')
+    plt.savefig(os.path.join(plots_path, 'PIC_clustering.png'))
+    plt.close()
+    
+    # Plot all other algorithms
+    for name, algo in algorithms.items():
+        try:
+            y_pred = algo()
+            nmi = normalized_mutual_info_score(y_true, y_pred)
+            plt.figure()
+            plt.scatter(X[:, 0], X[:, 1], c=y_pred, cmap='viridis', s=20)
+            plt.title(f'{name} ({nmi})')
+            plt.savefig(os.path.join(plots_path, f'{name}_clustering.png'))
+            plt.close()
+        except Exception as e:
+            print(f"Error with {name}: {e}")
