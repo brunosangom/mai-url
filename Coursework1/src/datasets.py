@@ -1,6 +1,14 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs, make_circles
+import os
+import urllib.request
+import tarfile
+import glob
+import pickle
+from PIL import Image
+import scipy.io
+from tensorflow.keras.datasets import mnist
+import bz2
 
 def synthetic_dataset_1(cluster_density=0.75, random_state=42):
     n_samples = int(400*cluster_density)
@@ -100,3 +108,120 @@ def synthetic_dataset_3(cluster_density=0.75, random_state=42):
     Y = np.concatenate((y_noise, y1, y2))
 
     return X, Y
+
+def download_mnist():
+    """
+    Loads MNIST dataset and selects only the testing images with digits 0-4.
+    Returns (X, Y_true) from the filtered test set.
+    """
+    (_, _), (x_test, y_test) = mnist.load_data()
+    mask = y_test < 5
+    X = x_test[mask].reshape(-1, 28*28)
+    Y_true = y_test[mask]
+    return X, Y_true
+
+def prepare_usps(raw_data_path):
+    """
+    Loads the USPS dataset from the provided bz2 compressed files and returns (X, Y_true).
+    """
+    def load_bz2(filepath):
+        """
+        Loads USPS data from a bz2 file in LIBSVM format.
+        Returns (X, Y_true).
+        """
+        X, Y_true = [], []
+        with bz2.BZ2File(filepath, 'rb') as f:  # 'rb' for binary mode
+            for line in f:
+                line = line.decode('utf-8').strip()  # Decode each line
+                if not line:
+                    continue
+                parts = line.split()
+                # First element is the label
+                Y_true.append(int(parts[0]))
+                # Remaining are feature:value pairs
+                features = np.zeros(256)  # USPS images are 16x16
+                for item in parts[1:]:
+                    index, value = item.split(':')
+                    features[int(index) - 1] = float(value)  # LIBSVM indexing starts from 1
+                X.append(features)
+        return np.array(X), np.array(Y_true)
+
+
+
+    train_file = os.path.join(raw_data_path, 'usps.bz2')
+    test_file = os.path.join(raw_data_path, 'usps.t.bz2')
+    
+    X_train, Y_train = load_bz2(train_file)
+    X_test, Y_test = load_bz2(test_file)
+    
+    # Combine train and test sets
+    X = np.vstack([X_train, X_test])
+    Y_true = np.hstack([Y_train, Y_test])
+    
+    return X, Y_true
+
+def prepare_caltech256(raw_data_path):
+    """
+    Loads the Caltech-256 dataset from the tar file, extracts the specified categories,
+    and selects the first 100 images from each category. Returns (X, Y_true).
+    """
+    tar_filename = os.path.join(raw_data_path, '256_ObjectCategories.tar')
+    extract_path = os.path.join(raw_data_path, '256_ObjectCategories')
+    
+    if not os.path.exists(extract_path):
+        print("Extracting Caltech-256 dataset...")
+        with tarfile.open(tar_filename) as tar:
+            tar.extractall()
+    
+    categories = ['hibiscus', 'ketch-101', 'leopards-101', 'motorbikes-101', 'airplanes-101', 'faces-easy-101']
+    label_dict = {cat: idx for idx, cat in enumerate(categories)}
+    X, Y_true = [], []
+
+    def find_category_folder(extract_path, category):
+        # Search for folders that match the pattern 'XXX.category'
+        for folder in os.listdir(extract_path):
+            if folder.endswith(f'.{category}'):
+                return os.path.join(extract_path, folder)
+        raise ValueError(f"Category '{category}' not found in Caltech-256 dataset.")
+    
+    for cat in categories:
+        cat_folder = find_category_folder(extract_path, cat)
+        img_files = sorted(glob.glob(os.path.join(cat_folder, '*')))
+        for img_path in img_files[:100]:
+            try:
+                img = Image.open(img_path).convert('L').resize((60, 70))
+                X.append(np.array(img).flatten())
+                Y_true.append(label_dict[cat])
+            except Exception as e:
+                print(f"Error loading {img_path}: {e}")
+    
+    X = np.array(X)
+    Y_true = np.array(Y_true)
+    return X, Y_true
+
+
+def prepare_datasets(data_path, raw_data_path):
+    """
+    Downloads and processes USPS, MNIST, and Caltech-256 datasets.
+    Saves each dataset as a pickle file in the specified data_path.
+    """
+    datasets = {
+        'MNIST': download_mnist(),
+        'USPS': prepare_usps(raw_data_path),
+        'Caltech-256': prepare_caltech256(raw_data_path)
+    }
+    os.makedirs(data_path, exist_ok=True)
+    for name, data in datasets.items():
+        with open(os.path.join(data_path, f'{name}.pkl'), 'wb') as f:
+            pickle.dump(data, f)
+
+def load_dataset(data_path, dataset_name):
+    """
+    Loads a specified dataset from a pickle file.
+    Returns (X, Y_true) for the requested dataset.
+    """
+    filepath = os.path.join(data_path, f'{dataset_name}.pkl')
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"Dataset '{dataset_name}' not found at {data_path}.")
+    with open(filepath, 'rb') as f:
+        return pickle.load(f)
