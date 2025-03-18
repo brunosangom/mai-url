@@ -1,7 +1,72 @@
 \section{Path Integral Clustering}
 
-\subsection{PIC Algorithm}
-Explain the algorithm itself.
+Path Integral Clustering (PIC)\cite{PIC} is an agglomerative clustering approach that leverages the structural properties of a data graph to measure cluster stability. By integrating over all possible paths within a cluster, PIC quantifies how strongly connected the members are. Clusters that exhibit a large path integral are deemed stable, and the incremental increase in the path integral after merging two clusters is used as an affinity measure. This section describes both the theoretical algorithm and its practical implementation.
 
-\subsection{Implementation}
-Explain the algorithm implementation here.
+\subsection{PIC Algorithm}
+The PIC algorithm consists of the following key steps (this is a summarized version; the full description can be found with more detail in \cite{PIC}):
+
+\paragraph{Graph Construction.}  
+Given a dataset $\{x_i\}_{i=1}^n$, a directed graph $G=(V,E)$ is constructed where each data point corresponds to a vertex. For a pair of points, the weight of the edge from $x_i$ to $x_j$ is defined as
+\[
+w_{ij} = \begin{cases}
+\exp\Bigl(-\frac{\mathrm{dist}(i, j)^2}{\sigma^2}\Bigr), & \text{if } x_j \in \mathcal{N}_i^K,\\[1mm]
+0, & \text{otherwise,}
+\end{cases}
+\]
+where $\mathrm{dist}(i, j)$ is the distance between $x_i$ and $x_j$, $\mathcal{N}_i^K$ is the set of $K$ nearest neighbors of $x_i$, and $\sigma^2$ is calculated as follows:
+\[
+\sigma^2=\frac{\sum_{i=1}^n \sum_{x_j \in \mathcal{N}_i^3} \mathrm{dist}(i, j)^2}{3n(-\ln{a})}
+\]
+
+The transition probability matrix $P$ is then computed by normalizing the rows of the weight matrix:
+\[
+p_{ij} = \frac{w_{ij}}{\sum_{j} w_{ij}}.
+\]
+
+\paragraph{Initial Clustering.}  
+A simple nearest-neighbor merging is applied to form initial clusters. Each data point is merged with its nearest neighbor, and the connected components of the resulting graph are used as the starting clusters.
+
+\paragraph{Path Integral Computation.}  
+For any cluster $C$, the stability is quantified by its path integral:
+\[
+S_C = \frac{1}{|C|^2} \, \mathbf{1}^T \Bigl(I - zP_C\Bigr)^{-1} \mathbf{1},
+\]
+where $P_C$ is the submatrix of $P$ corresponding to the vertices in $C$, $z\in(0,1)$ is a weighting parameter that favors short paths, and $\mathbf{1}$ is a vector of ones. The path integral represents the total contribution of all paths (of all lengths) within the cluster and can be interpreted as the probability that a random walk starting in $C$ remains in $C$.
+
+\paragraph{Affinity Measurement and Cluster Merging.}  
+The affinity between two clusters, say $C_a$ and $C_b$, is measured by the incremental path integral:
+\[
+\mathcal{A}_{C_a, C_b} = \Bigl(S_{C_a \mid C_a\cup C_b} - S_{C_a}\Bigr) + \Bigl(S_{C_b \mid C_a\cup C_b} - S_{C_b}\Bigr),
+\]
+where $S_{C \mid C_a\cup C_b}$ is the conditional path integral computed on the union of clusters, with the contributions only from vertices originally in $C$. A high affinity indicates that merging the clusters significantly increases the number of intra-cluster paths; therefore, creating a more stable cluster. The algorithm iteratively merges the pair of clusters with the highest affinity until the desired number of clusters is achieved.
+
+\subsection{PIC Implementation}
+The implementation of PIC is designed for computational efficiency and ease of integration. Key aspects of the implementation are described below:
+
+\paragraph{Graph Construction via Nearest Neighbors.}  
+The implementation first computes the 3-nearest neighbors of each point to robustly estimate the scale parameter $\sigma^2$. A subsequent $K$-nearest neighbor search then constructs the weighted graph and the transition probability matrix $P$.
+
+\paragraph{Efficient Path Integral Evaluation.}  
+Rather than computing the inverse of $(I - zP_C)$ explicitly—which can be computationally expensive—the algorithm solves the linear system
+\[
+\bigl(I - zP_C\bigr) y = \mathbf{1}
+\]
+using numerical solvers (e.g., via \texttt{numpy.linalg.solve}). This approach takes advantage of the sparsity of $P_C$ and reduces the complexity to be linear in the size of the cluster.
+
+\paragraph{Incremental Cluster Merging Using a Heap.}  
+A priority queue (implemented as a max-heap) is used to efficiently identify the pair of clusters with the highest affinity. After merging two clusters, only the affinities involving the new cluster are updated and inserted into the heap. This strategy minimizes unnecessary computations and allows the algorithm to scale to larger datasets.
+
+\paragraph{Modular Code Structure.}  
+The PIC algorithm is implemented as a Python class conforming to the \texttt{sklearn} API. Key functions are modularized as follows:
+\begin{itemize}
+  \item \texttt{\_build\_graph}: Constructs the weighted graph and computes the transition probability matrix.
+  \item \texttt{\_initial\_clusters}: Forms initial clusters using nearest neighbor merging.
+  \item \texttt{\_compute\_S} and \texttt{\_compute\_S\_cond}: Compute the path integral for a cluster and its conditional counterpart for merged clusters.
+  \item \texttt{\_merge\_clusters}: Iteratively merges clusters based on the incremental path integral, using a heap to manage candidate pairs.
+  \item \texttt{fit}: Fits the PIC model to the data and computes the clusters.
+  \item \texttt{predict}: Assigns new samples to the nearest cluster center.
+  \item \texttt{fit\_predict}: Fits the PIC model to the data and returns the cluster labels.
+\end{itemize}
+These design decisions ensure that the algorithm remains both theoretically robust and practically efficient.
+
+Overall, the PIC implementation balances the theoretical formulation of the path integral with practical considerations for computational efficiency, making it suitable for clustering tasks on datasets with complex, manifold-like structures.
