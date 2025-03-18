@@ -1,11 +1,12 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,10pt,twocolumn]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{float}
 
-\title{URL Coursework 1: Clustering \\ \Large{Agglomerative clustering via maximum \\ incremental path integral}}
+\title{URL Coursework 1: Clustering \\ \Large{Agglomerative clustering via maximum \\ incremental path integral~\cite{PIC}}}
 \author{Bruno Sánchez Gómez}
 \date{\today}
 
@@ -17,22 +18,13 @@
 Your abstract here.
 \end{abstract}
 
-\pagenumbering{gobble}
-\tableofcontents
-\newpage
-\pagenumbering{arabic}
+\input{sections/introduction}
 
-\section{Introduction}
-Reference to \cite{PIC}.
+\input{sections/pic}
 
-\section{Path Integral Clustering Algorithm}
-Explain the algorithm implementation here.
+\input{sections/experiments}
 
-\section{Experiments \& Difficulties Encountered}
-Your main content here.
-
-\section{Conclusion}
-Your conclusion here.
+\input{sections/conclusion}
 
 \bibliographystyle{plain}
 \bibliography{references}
