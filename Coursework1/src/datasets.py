@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.datasets import make_blobs, make_circles
+from sklearn.datasets import make_blobs, make_circles, load_breast_cancer, load_iris
 import os
 import urllib.request
 import tarfile
@@ -120,6 +120,26 @@ def download_mnist():
     Y_true = y_test[mask]
     return X, Y_true
 
+def load_iris_dataset():
+    """
+    Loads Iris dataset from scikit-learn.
+    Returns (X, Y_true).
+    """
+    iris = load_iris()
+    X = iris.data
+    Y_true = iris.target
+    return X, Y_true
+
+def load_breast_cancer_dataset():
+    """
+    Loads Breast Cancer dataset from scikit-learn.
+    Returns (X, Y_true).
+    """
+    cancer = load_breast_cancer()
+    X = cancer.data
+    Y_true = cancer.target
+    return X, Y_true
+
 def prepare_usps(raw_data_path):
     """
     Loads the USPS dataset from the provided bz2 compressed files and returns (X, Y_true).
@@ -208,7 +228,9 @@ def prepare_datasets(data_path, raw_data_path):
     datasets = {
         'MNIST': download_mnist(),
         'USPS': prepare_usps(raw_data_path),
-        'Caltech-256': prepare_caltech256(raw_data_path)
+        'Caltech-256': prepare_caltech256(raw_data_path),
+        'Iris': load_iris_dataset(),
+        'Breast-Cancer': load_breast_cancer_dataset()
     }
     os.makedirs(data_path, exist_ok=True)
     for name, data in datasets.items():

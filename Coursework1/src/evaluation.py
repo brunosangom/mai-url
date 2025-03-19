@@ -3,8 +3,9 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from sklearn.cluster import AgglomerativeClustering, KMeans, AffinityPropagation, SpectralClustering
-from sklearn.metrics import normalized_mutual_info_score
+from sklearn.metrics import normalized_mutual_info_score, silhouette_samples, silhouette_score
 from sklearn.metrics.pairwise import rbf_kernel, euclidean_distances
 from sklearn.neighbors import kneighbors_graph
 from scipy.optimize import linear_sum_assignment
@@ -259,36 +260,46 @@ def evaluate_clustering_algorithms(X, y_true, n_clusters, y_pred_pic):
     results = {
         'Algorithm': [],
         'NMI': [],
-        'CE': []
+        'CE': [],
+        'Silhouette': []
     }
     
     # Add PIC results first
     nmi_pic = normalized_mutual_info_score(y_true, y_pred_pic)
     ce_pic = clustering_error(y_true, y_pred_pic)
+    silhouette_pic = silhouette_score(X, y_pred_pic)
+
     results['Algorithm'].append('PIC')
     results['NMI'].append(nmi_pic)
     results['CE'].append(ce_pic)
-    # print(f"PIC: NMI = {nmi_pic:.4f}, CE = {ce_pic:.4f}")
+    results['Silhouette'].append(silhouette_pic)
+
+    print(f"{name}: NMI = {nmi_pic:.4f}, CE = {ce_pic:.4f}, Silhouette = {silhouette_pic:.4f}")
     
     # Evaluate all other algorithms
     for name, algo in algorithms.items():
         # print(f"Running {name}...")
         try:
             y_pred = algo()
+
             nmi = normalized_mutual_info_score(y_true, y_pred)
             ce = clustering_error(y_true, y_pred)
+            silhouette = silhouette_score(X, y_pred)
             
             results['Algorithm'].append(name)
             results['NMI'].append(nmi)
             results['CE'].append(ce)
+            results['Silhouette'].append(silhouette)
             
-            print(f"{name}: NMI = {nmi:.4f}, CE = {ce:.4f}")
+            print(f"{name}: NMI = {nmi:.4f}, CE = {ce:.4f}, Silhouette = {silhouette:.4f}")
         except Exception as e:
             print(f"Error with {name}: {e}")
             results['Algorithm'].append(name)
             results['NMI'].append(np.nan)
             results['CE'].append(np.nan)
+            results['Silhouette'].append(np.nan)
     
+    print("\n")
     # Create and return DataFrame
     results_df = pd.DataFrame(results)
     return results_df
@@ -343,3 +354,37 @@ def plot_clustering_algorithms(X, y_true, n_clusters, y_pred_pic, plots_path):
             plt.close()
         except Exception as e:
             print(f"Error with {name}: {e}")
+
+def plot_silhouette(X, y_pred, n_clusters, plot_path):
+    """Create a silhouette plot for the given clustering results."""
+
+    silhouette_avg = silhouette_score(X, y_pred)
+    sample_silhouette_values = silhouette_samples(X, y_pred)
+
+    fig, ax1 = plt.subplots(1, 1)
+    fig.set_size_inches(10, 6)
+
+    ax1.set_xlim([-0.1, 1])
+    ax1.set_ylim([0, len(X) + (n_clusters + 1) * 10])
+
+    y_lower = 10
+    for i in range(n_clusters):
+        ith_cluster_silhouette_values = sample_silhouette_values[y_pred == i]
+        ith_cluster_silhouette_values.sort()
+
+        size_cluster_i = ith_cluster_silhouette_values.shape[0]
+        y_upper = y_lower + size_cluster_i
+
+        color = cm.nipy_spectral(float(i) / n_clusters)
+        ax1.fill_betweenx(np.arange(y_lower, y_upper), 0, ith_cluster_silhouette_values, facecolor=color, edgecolor=color, alpha=0.7)
+
+        ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i))
+        y_lower = y_upper + 10
+
+    ax1.axvline(x=silhouette_avg, color="red", linestyle="--")
+    ax1.set_title("Silhouette Plot")
+    ax1.set_xlabel("Silhouette coefficient values")
+    ax1.set_ylabel("Cluster label")
+
+    plt.savefig(plot_path)
+    plt.close()

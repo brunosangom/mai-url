@@ -1,5 +1,5 @@
 \section{Experiments}
-This section presents the experimental evaluation of the Path Integral Clustering (PIC) algorithm compared to various state-of-the-art clustering methods. We assess performance on both synthetic and real-world imagery datasets, following the experimental framework described in the original paper\cite{PIC}. Then, we present some criticism and issues encountered during the experiment replication process. Finally, we perform some additional experiments to further evaluate PIC's performance.
+This section presents the experimental evaluation of the Path Integral Clustering (PIC) algorithm compared to various state-of-the-art clustering methods. We assess performance on both synthetic and real-world imagery datasets, following the experimental framework described in the original paper\cite{PIC}. Then, we present some criticism and issues encountered during the experiment reproduction process. Finally, we perform some additional experiments to further evaluate PIC's performance.
 
 \subsection{Synthetic Datasets}
 We recreated the three synthetic datasets introduced in \cite{PIC} to visually demonstrate PIC's effectiveness on data with complex structures.
@@ -135,7 +135,7 @@ Our results largely align with those reported in the original paper, with PIC co
 \end{enumerate}
 
 \subsection{Issues Encountered}
-Several challenges were encountered during the attempt to replicate the original paper's experiments with the highest fidelity possible:
+Several challenges were encountered during the attempt to reproduce the original paper's experiments with the highest fidelity possible:
 
 \begin{enumerate}
     \item \textbf{Synthetic Dataset Generation}: The original paper did not provide clear guidelines for synthetic dataset generation. Considerable tuning was required to create datasets in which the PIC algorithm exhibited the behaviors described in the paper.
@@ -152,25 +152,135 @@ Several challenges were encountered during the attempt to replicate the original
 Despite these challenges, our implementation successfully reproduced the main findings of the original paper, confirming PIC's effectiveness for clustering tasks, especially on datasets with complex manifold structures.
 
 \subsection{Additional Experiments}
-To further evaluate PIC's performance, we conducted some additional experiments. First, we gathered time-related information from the imagery datasets experiments in order to perform a scalability analysis.
+To further evaluate PIC's performance beyond the original paper's scope, we conducted additional experiments focusing on different evaluation criteria and datasets, and an analysis on the algorithm's scalability. These experiments aim to provide a more comprehensive understanding of PIC's strengths and limitations across varied clustering scenarios.
 
-\subsubsection{Scalability Analysis}
-The original paper states that the PIC algorithm scales linearly with the number of clusters. However, it does not mention the algorithm's scalability with respect to the number of samples or dimensions. To investifate this, we recorded the runtime of PIC on each of the three image datasets, which have different number of samples, clusters and dimensions. The results are shown in Table \ref{table:time}.
+\subsubsection{Additional Evaluation Criteria}
+In the original experiments, only external evaluation criteria are used (NMI and CE). We propose to include an internal evaluation metric to provide a more comprehensive assessment of clustering quality. We chose the Silhouette score due to its ability to measure both cluster cohesion and separation, as well as being well-suited for visualization purposes.
+
+We evaluated the Silhouette scores of all algorithms on the image datasets, and the results are shown in Table \ref{table:silhouette}.
 
 \begin{table}[h]
     \centering
     \begin{tabular}{|l|c|c|c|}
     \hline
-     & \textbf{MNIST} & \textbf{USPS} & \textbf{Caltech-256} \\
+    \textit{Silhouette} & \textbf{MNIST} & \textbf{USPS} & \textbf{Caltech-256} \\
     \hline
-    \textbf{\# of samples} & 5,139 & 9,298 & 600 \\ \hline
-    \textbf{\# of clusters} & 5 & 10 & 6 \\ \hline
-    \textbf{Dimensionality} & 784 & 256 & 4,200 \\ \hline
-    \textbf{PIC Runtime (s)} & 256.1 & 854.7 & 1.5 \\ \hline
+    \textbf{PIC}       & \textbf{0.016} & 0.269 & 0.307 \\ \hline
+    \textbf{k-med}     & 0.534 & 0.373 & 0.607 \\ \hline
+    \textbf{A-link}    & 0.573 & 0.778 & 0.665 \\ \hline
+    \textbf{S-link}    & 0.779 & 0.833 & 0.828 \\ \hline
+    \textbf{C-link}    & 0.280 & 0.601 & 0.507 \\ \hline
+    \textbf{AP}        & 0.960 & 0.934 & 0.705 \\ \hline
+    \textbf{NCuts}     & 0.115 & 0.356 & 0.328 \\ \hline
+    \textbf{NJW}       & 0.033 & 0.269 & \textbf{0.290} \\ \hline
+    \textbf{CT}        & 0.493 & 0.615 & 0.747 \\ \hline
+    \textbf{Zell}      & 0.027 & 0.197 & 0.680 \\ \hline
+    \textbf{C-kernel}  & 0.129 & 0.269 & 0.368 \\ \hline
+    \textbf{D-kernel}  & 0.029 & \textbf{0.132} & 0.315 \\
+    \hline
+    \end{tabular}
+    \caption{Silhouette scores for all algorithms on image datasets. Higher values indicate better performance. Bold indicates best performance.}
+    \label{table:silhouette}
+\end{table}
+
+Fill with true values. Comment results.
+
+\subsubsection{Additional Datasets}
+The original paper only tests the PIC algorithm on synthetic data and on imagery datasets, we included as well the Iris and the Wisconsin Breast Cancer datasets. These widely-used benchmark datasets allow us to evaluate PIC's performance on lower-dimensional, well-structured data compared to the high-dimensional image datasets. 
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|}
+    \hline
+    \textit{NMI} & \textbf{Iris} & \textbf{Breast Cancer} \\
+    \hline
+    \textbf{PIC}       & \textbf{0.016} & 0.269 \\ \hline
+    \textbf{k-med}     & 0.534 & 0.373 \\ \hline
+    \textbf{A-link}    & 0.573 & 0.778 \\ \hline
+    \textbf{S-link}    & 0.779 & 0.833 \\ \hline
+    \textbf{C-link}    & 0.280 & 0.601 \\ \hline
+    \textbf{AP}        & 0.960 & 0.934 \\ \hline
+    \textbf{NCuts}     & 0.115 & 0.356 \\ \hline
+    \textbf{NJW}       & 0.033 & 0.269 \\ \hline
+    \textbf{CT}        & 0.493 & 0.615 \\ \hline
+    \textbf{Zell}      & 0.027 & 0.197 \\ \hline
+    \textbf{C-kernel}  & 0.129 & 0.269 \\ \hline
+    \textbf{D-kernel}  & 0.029 & \textbf{0.132} \\
+    \hline
+    \end{tabular}
+    \caption{NMI scores on additional datasets.}
+    \label{table:nmi_additional}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|}
+    \hline
+    \textit{CE} & \textbf{Iris} & \textbf{Breast Cancer} \\
+    \hline
+    \textbf{PIC}       & \textbf{0.016} & 0.269 \\ \hline
+    \textbf{k-med}     & 0.534 & 0.373 \\ \hline
+    \textbf{A-link}    & 0.573 & 0.778 \\ \hline
+    \textbf{S-link}    & 0.779 & 0.833 \\ \hline
+    \textbf{C-link}    & 0.280 & 0.601 \\ \hline
+    \textbf{AP}        & 0.960 & 0.934 \\ \hline
+    \textbf{NCuts}     & 0.115 & 0.356 \\ \hline
+    \textbf{NJW}       & 0.033 & 0.269 \\ \hline
+    \textbf{CT}        & 0.493 & 0.615 \\ \hline
+    \textbf{Zell}      & 0.027 & 0.197 \\ \hline
+    \textbf{C-kernel}  & 0.129 & 0.269 \\ \hline
+    \textbf{D-kernel}  & 0.029 & \textbf{0.132} \\
+    \hline
+    \end{tabular}
+    \caption{CE scores on additional datasets.}
+    \label{table:ce_additional}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|}
+    \hline
+    \textit{Silhouette} & \textbf{Iris} & \textbf{Breast Cancer} \\
+    \hline
+    \textbf{PIC}       & \textbf{0.016} & 0.269 \\ \hline
+    \textbf{k-med}     & 0.534 & 0.373 \\ \hline
+    \textbf{A-link}    & 0.573 & 0.778 \\ \hline
+    \textbf{S-link}    & 0.779 & 0.833 \\ \hline
+    \textbf{C-link}    & 0.280 & 0.601 \\ \hline
+    \textbf{AP}        & 0.960 & 0.934 \\ \hline
+    \textbf{NCuts}     & 0.115 & 0.356 \\ \hline
+    \textbf{NJW}       & 0.033 & 0.269 \\ \hline
+    \textbf{CT}        & 0.493 & 0.615 \\ \hline
+    \textbf{Zell}      & 0.027 & 0.197 \\ \hline
+    \textbf{C-kernel}  & 0.129 & 0.269 \\ \hline
+    \textbf{D-kernel}  & 0.029 & \textbf{0.132} \\
+    \hline
+    \end{tabular}
+    \caption{Silhouette scores on additional datasets.}
+    \label{table:silhouette_additional}
+\end{table}
+
+Fill with true values. Comment results. Ref to Tables.
+
+Add Silhouette plots.
+
+\subsubsection{Scalability Analysis}
+
+\begin{table*}[h]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|c|}
+    \hline
+     & \textbf{MNIST} & \textbf{USPS} & \textbf{Caltech-256} & \textbf{Iris} & \textbf{Breast Cancer} \\
+    \hline
+    \textbf{\# of samples} & 5,139 & 9,298 & 600 & 150 & 569 \\ \hline
+    \textbf{\# of clusters} & 5 & 10 & 6 & 3 & 2 \\ \hline
+    \textbf{Dimensionality} & 784 & 256 & 4,200 & 4 & 30 \\ \hline
+    \textbf{PIC Runtime (s)} & 256.1 & 854.7 & 1.5 & 0 & 0 \\ \hline
     \end{tabular}
     \caption{Runtime of PIC on different datasets with varying sizes and dimensionalities.}
     \label{table:time}
-\end{table}
+\end{table*}
+
+The original paper states that the PIC algorithm scales linearly with the number of clusters. However, it does not mention the algorithm's scalability with respect to the number of samples or dimensions. To investifate this, we recorded the runtime of PIC on each of the tested datasets, which have different number of samples, clusters and dimensions. The results are shown in Table \ref{table:time}.
 
 The results show that PIC's runtime does not seem to be affected by the dimensionality of the dataset in any significant way, since the Caltech-256 dataset has the highest number of dimensions and yet has the lowest runtime by a wide margin. However, the runtime does greatly increase with the number of samples, as seen in the MNIST and USPS datasets. The number of clusters could also have an impact, but it does not seem to be as significant as that of the number of samples.
-
