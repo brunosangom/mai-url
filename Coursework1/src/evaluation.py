@@ -316,7 +316,8 @@ def plot_clustering_algorithms(X, y_true, n_clusters, y_pred_pic, plots_path):
     # Plot ground truth
     plt.figure()
     plt.scatter(X[:, 0], X[:, 1], c=y_true, cmap='viridis', s=20)
-    plt.title('Ground Truth')
+    plt.title('Ground Truth', fontsize=16)
+    plt.tick_params(axis='both', which='both', bottom=False, top=False, left=False, right=False, labelbottom=False, labelleft=False)
     plt.savefig(os.path.join(plots_path, 'GT_clustering.png'))
     plt.close()
 
@@ -324,7 +325,8 @@ def plot_clustering_algorithms(X, y_true, n_clusters, y_pred_pic, plots_path):
     nmi_pic = normalized_mutual_info_score(y_true, y_pred_pic)
     plt.figure()
     plt.scatter(X[:, 0], X[:, 1], c=y_pred_pic, cmap='viridis', s=20)
-    plt.title(f'PIC ({nmi_pic})')
+    plt.title(f'PIC ({nmi_pic:.4f})', fontsize=16)
+    plt.tick_params(axis='both', which='both', bottom=False, top=False, left=False, right=False, labelbottom=False, labelleft=False)
     plt.savefig(os.path.join(plots_path, 'PIC_clustering.png'))
     plt.close()
     
@@ -335,7 +337,8 @@ def plot_clustering_algorithms(X, y_true, n_clusters, y_pred_pic, plots_path):
             nmi = normalized_mutual_info_score(y_true, y_pred)
             plt.figure()
             plt.scatter(X[:, 0], X[:, 1], c=y_pred, cmap='viridis', s=20)
-            plt.title(f'{name} ({nmi})')
+            plt.title(f'{name} ({nmi:.4f})', fontsize=16)
+            plt.tick_params(axis='both', which='both', bottom=False, top=False, left=False, right=False, labelbottom=False, labelleft=False)
             plt.savefig(os.path.join(plots_path, f'{name}_clustering.png'))
             plt.close()
         except Exception as e:
