@@ -1,11 +1,74 @@
 \section{Experiments}
-Experiments and difficulties.
+This section presents the experimental evaluation of the Path Integral Clustering (PIC) algorithm compared to various state-of-the-art clustering methods. We assess performance on both synthetic and real-world imagery datasets, following the experimental framework described in the original paper\cite{PIC}. Then, we present some criticism and issues encountered during the experiment replication process. Finally, we perform some additional experiments to further evaluate PIC's performance.
 
 \subsection{Synthetic Datasets}
+We recreated the three synthetic datasets introduced in \cite{PIC} to visually demonstrate PIC's effectiveness on data with complex structures.
 
+Figure \ref{fig:synthetic} shows the clustering results on these synthetic datasets.
+
+\begin{figure*}[htb]
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_0/A-link_clustering.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_0/S-link_clustering.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_0/PIC_clustering.png}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_1/A-link_clustering.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_1/S-link_clustering.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_1/PIC_clustering.png}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_2/NJW_clustering.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_2/NCuts_clustering.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/dataset_2/PIC_clustering.png}
+    \end{subfigure}
+
+    \caption{Clustering results on the three Synthetic Datasets (NMI scores in parentheses).}
+    \label{fig:synthetic}
+\end{figure*}
+
+The results demonstrate PIC's ability to handle complex data structures. Particularly noteworthy is PIC's performance on Dataset 1, where it successfully identified both the dense clusters and the circular pattern despite the presence of noise. For Dataset 2, PIC effectively captured the sinusoidal and non-convex patterns, outperforming traditional algorithms that typically prefer convex clusters. Dataset 3 showcases PIC's robustness to noise, accurately separating the two main clusters from the surrounding noise.
 
 \subsection{Imagery Datasets}
-\begin{table}[H]
+We evaluated PIC and 11 other clustering algorithms on three widely used image datasets:
+
+\begin{enumerate}
+    \item \textbf{MNIST}: Handwritten digits (0-4), with 5,139 samples and 784 dimensions (28$\times$28 pixels).
+    \item \textbf{USPS}: Handwritten digits (0-9), with 9,298 samples and 256 dimensions (16$\times$16 pixels).
+    \item \textbf{Caltech-256}: Reduced to six classes (hibiscus, ketch-101, leopards-101, motorbikes-101, airplanes-101, and faces-easy-101), with 600 samples and 4,200 dimensions (60$\times$70 grayscale images).
+\end{enumerate}
+
+\begin{table}[h]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
@@ -20,13 +83,16 @@ Experiments and difficulties.
 \textbf{NCuts}     & 0.807 & 0.772 & 0.589 \\ \hline
 \textbf{NJW}       & 0.898 & 0.784 & 0.529 \\ \hline
 \textbf{CT}        & 0.634 & 0.439 & 0.181 \\ \hline
-\textbf{Zell}      & 0.913 & 0.846 & 0.343 \\ \hline
+\textbf{Zell}      & 0.913 & \textbf{0.846} & 0.343 \\ \hline
 \textbf{C-kernel}  & 0.780 & 0.768 & 0.521 \\ \hline
 \textbf{D-kernel}  & 0.903 & \textbf{0.846} & 0.508 \\
 \hline
 \end{tabular}
+\caption{Normalized Mutual Information (NMI) scores for all algorithms on image datasets. Higher values indicate better performance. Bold indicates best performance.}
 \label{table:nmi}
-\phantom{ }\\[1em]
+\end{table}
+
+\begin{table}[h]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
@@ -46,10 +112,65 @@ Experiments and difficulties.
 \textbf{D-kernel}  & 0.029 & \textbf{0.132} & 0.315 \\
 \hline
 \end{tabular}
+\caption{Clustering Error (CE) scores for all algorithms on image datasets. Lower values indicate better performance. Bold indicates best performance.}
 \label{table:ce}
 \end{table}
 
-\begin{table}[H]
+Looking at the results in Tables \ref{table:nmi} and \ref{table:ce}, we observe that:
 
+\begin{itemize}
+    \item \textbf{MNIST}: PIC achieved the highest NMI (0.940) and lowest CE (0.016), significantly outperforming other methods. This suggests that PIC effectively captures the intrinsic manifold structure of the handwritten digits.
+    
+    \item \textbf{USPS}: PIC performed well with an NMI of 0.835, though slightly behind the Diffusion kernel (D-kernel) and Zell methods which both achieved an NMI of 0.846. In terms of CE, D-kernel had the best performance (0.132), followed by Zell (0.197) and PIC (0.269). These results still show strong performance for PIC.
+    
+    \item \textbf{Caltech-256}: PIC significantly outperformed all other methods with an NMI of 0.653. For CE, NJW had the lowest value (0.290), followed closely by PIC (0.307). This demonstrates PIC's ability to handle higher-dimensional image data with complex visual patterns.
+\end{itemize}
+
+Our results largely align with those reported in the original paper, with PIC consistently performing as one of the top methods across datasets. However, we observed some differences:
+
+\begin{enumerate}
+    \item On the USPS dataset, our implementation shows D-kernel and Zell slightly outperforming PIC, whereas the original paper reported PIC as the best method. This discrepancy might be due to differences in the dataset composition (9,298 samples in our case versus 11,000 mentioned in the paper), or in each of our custom implementations (since these algorithms are not supported by stardard libraries).
+    
+    \item For Caltech-256, we achieved similar relative performance between methods, though our absolute scores differ from the paper, likely due to different preprocessing approaches.
+\end{enumerate}
+
+\subsection{Issues Encountered}
+Several challenges were encountered during the attempt to replicate the original paper's experiments with the highest fidelity possible:
+
+\begin{enumerate}
+    \item \textbf{Synthetic Dataset Generation}: The original paper did not provide clear guidelines for synthetic dataset generation. Considerable tuning was required to create datasets in which the PIC algorithm exhibited the behaviors described in the paper.
+    
+    \item \textbf{Algorithm Implementation}: Implementing all 11 comparison algorithms was challenging, requiring adaptation of existing libraries and development of custom implementations, since not all of them are supported by stardard Python libraries.
+    
+    \item \textbf{Dataset Availability}: Two datasets mentioned in the original paper were not available: FRGC-T requires restricted access, and PubFig is no longer publicly available.
+    
+    \item \textbf{Dataset Discrepancies}: The USPS dataset contained 9,298 samples instead of the 11,000 mentioned in the paper.
+    
+    \item \textbf{Preprocessing Ambiguity}: For Caltech-256, the paper stated a dimensionality of 4,200 but did not specify how images of different sizes were processed. We adopted a 60$\times$70 grayscale representation.
+\end{enumerate}
+
+Despite these challenges, our implementation successfully reproduced the main findings of the original paper, confirming PIC's effectiveness for clustering tasks, especially on datasets with complex manifold structures.
+
+\subsection{Additional Experiments}
+To further evaluate PIC's performance, we conducted some additional experiments. First, we gathered time-related information from the imagery datasets experiments in order to perform a scalability analysis.
+
+\subsubsection{Scalability Analysis}
+The original paper states that the PIC algorithm scales linearly with the number of clusters. However, it does not mention the algorithm's scalability with respect to the number of samples or dimensions. To investifate this, we recorded the runtime of PIC on each of the three image datasets, which have different number of samples, clusters and dimensions. The results are shown in Table \ref{table:time}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|c|}
+    \hline
+     & \textbf{MNIST} & \textbf{USPS} & \textbf{Caltech-256} \\
+    \hline
+    \textbf{\# of samples} & 5,139 & 9,298 & 600 \\ \hline
+    \textbf{\# of clusters} & 5 & 10 & 6 \\ \hline
+    \textbf{Dimensionality} & 784 & 256 & 4,200 \\ \hline
+    \textbf{PIC Runtime (s)} & 256.1 & 854.7 & 1.5 \\ \hline
+    \end{tabular}
+    \caption{Runtime of PIC on different datasets with varying sizes and dimensionalities.}
+    \label{table:time}
 \end{table}
+
+The results show that PIC's runtime does not seem to be affected by the dimensionality of the dataset in any significant way, since the Caltech-256 dataset has the highest number of dimensions and yet has the lowest runtime by a wide margin. However, the runtime does greatly increase with the number of samples, as seen in the MNIST and USPS datasets. The number of clusters could also have an impact, but it does not seem to be as significant as that of the number of samples.
 
