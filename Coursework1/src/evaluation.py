@@ -274,7 +274,7 @@ def evaluate_clustering_algorithms(X, y_true, n_clusters, y_pred_pic):
     results['CE'].append(ce_pic)
     results['Silhouette'].append(silhouette_pic)
 
-    print(f"{name}: NMI = {nmi_pic:.4f}, CE = {ce_pic:.4f}, Silhouette = {silhouette_pic:.4f}")
+    print(f"PIC: NMI = {nmi_pic:.4f}, CE = {ce_pic:.4f}, Silhouette = {silhouette_pic:.4f}")
     
     # Evaluate all other algorithms
     for name, algo in algorithms.items():
