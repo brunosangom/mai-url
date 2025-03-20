@@ -165,49 +165,49 @@ We evaluated the Silhouette scores of all algorithms on the image datasets, and 
     \hline
     \textit{Silhouette} & \textbf{MNIST} & \textbf{USPS} & \textbf{Caltech-256} \\
     \hline
-    \textbf{PIC}       & \textbf{0.016} & 0.269 & 0.307 \\ \hline
-    \textbf{k-med}     & 0.534 & 0.373 & 0.607 \\ \hline
-    \textbf{A-link}    & 0.573 & 0.778 & 0.665 \\ \hline
-    \textbf{S-link}    & 0.779 & 0.833 & 0.828 \\ \hline
-    \textbf{C-link}    & 0.280 & 0.601 & 0.507 \\ \hline
-    \textbf{AP}        & 0.960 & 0.934 & 0.705 \\ \hline
-    \textbf{NCuts}     & 0.115 & 0.356 & 0.328 \\ \hline
-    \textbf{NJW}       & 0.033 & 0.269 & \textbf{0.290} \\ \hline
-    \textbf{CT}        & 0.493 & 0.615 & 0.747 \\ \hline
-    \textbf{Zell}      & 0.027 & 0.197 & 0.680 \\ \hline
-    \textbf{C-kernel}  & 0.129 & 0.269 & 0.368 \\ \hline
-    \textbf{D-kernel}  & 0.029 & \textbf{0.132} & 0.315 \\
+    \textbf{PIC}       & 0.106 & 0.024 & 0.129 \\ \hline
+    \textbf{k-med}     & 0.101 & 0.087 & 0.139 \\ \hline
+    \textbf{A-link}    & 0.103 & 0.095 & \textbf{0.174} \\ \hline
+    \textbf{S-link}    & -0.010 & 0.047 & 0.035 \\ \hline
+    \textbf{C-link}    & 0.093 & 0.040 & 0.101 \\ \hline
+    \textbf{AP}        & 0.060 & 0.078 & 0.063 \\ \hline
+    \textbf{NCuts}     & 0.084 & 0.086 & 0.149 \\ \hline
+    \textbf{NJW}       & \textbf{0.111} & 0.116 & 0.114 \\ \hline
+    \textbf{CT}        & 0.009 & -0.212 & -0.159 \\ \hline
+    \textbf{Zell}      & 0.109 & 0.114 & 0.057 \\ \hline
+    \textbf{C-kernel}  & 0.078 & 0.080 & 0.122 \\ \hline
+    \textbf{D-kernel}  & 0.107 & \textbf{0.147} & 0.112 \\
     \hline
     \end{tabular}
     \caption{Silhouette scores for all algorithms on image datasets. Higher values indicate better performance. Bold indicates best performance.}
     \label{table:silhouette}
 \end{table}
 
-Fill with true values. Comment results.
+Comment results.
 
 \subsubsection{Additional Datasets}
-The original paper only tests the PIC algorithm on synthetic data and on imagery datasets, we included as well the Iris and the Wisconsin Breast Cancer datasets. These widely-used benchmark datasets allow us to evaluate PIC's performance on lower-dimensional, well-structured data compared to the high-dimensional image datasets. 
+The original paper only tests the PIC algorithm on synthetic data and on imagery datasets, we included as well the Iris and the Wisconsin Breast Cancer datasets. These widely-used benchmark datasets allow us to evaluate PIC's performance on lower-dimensional, well-structured data compared to the high-dimensional image datasets. The results are shown in Tables \ref{table:nmi_additional}, \ref{table:ce_additional}, and \ref{table:silhouette_additional}.
 
 \begin{table}[h]
     \centering
     \begin{tabular}{|l|c|c|}
-    \hline
-    \textit{NMI} & \textbf{Iris} & \textbf{Breast Cancer} \\
-    \hline
-    \textbf{PIC}       & \textbf{0.016} & 0.269 \\ \hline
-    \textbf{k-med}     & 0.534 & 0.373 \\ \hline
-    \textbf{A-link}    & 0.573 & 0.778 \\ \hline
-    \textbf{S-link}    & 0.779 & 0.833 \\ \hline
-    \textbf{C-link}    & 0.280 & 0.601 \\ \hline
-    \textbf{AP}        & 0.960 & 0.934 \\ \hline
-    \textbf{NCuts}     & 0.115 & 0.356 \\ \hline
-    \textbf{NJW}       & 0.033 & 0.269 \\ \hline
-    \textbf{CT}        & 0.493 & 0.615 \\ \hline
-    \textbf{Zell}      & 0.027 & 0.197 \\ \hline
-    \textbf{C-kernel}  & 0.129 & 0.269 \\ \hline
-    \textbf{D-kernel}  & 0.029 & \textbf{0.132} \\
-    \hline
-    \end{tabular}
+        \hline
+        \textit{NMI} & \textbf{Iris} & \textbf{Breast Cancer} \\
+        \hline
+        \textbf{PIC}       & \textbf{0.806} & 0.409 \\ \hline
+        \textbf{k-med}     & 0.758 & \textbf{0.498} \\ \hline
+        \textbf{A-link}    & \textbf{0.806} & 0.088 \\ \hline
+        \textbf{S-link}    & 0.717 & 0.005 \\ \hline
+        \textbf{C-link}    & 0.722 & 0.088 \\ \hline
+        \textbf{AP}        & 0.669 & 0.272 \\ \hline
+        \textbf{NCuts}     & 0.786 & 0.420 \\ \hline
+        \textbf{NJW}       & -- & 0.046 \\ \hline
+        \textbf{CT}        & 0.397 & 0.414 \\ \hline
+        \textbf{Zell}      & 0.786 & 0.414 \\ \hline
+        \textbf{C-kernel}  & 0.777 & 0.299 \\ \hline
+        \textbf{D-kernel}  & 0.763 & 0.420 \\
+        \hline
+        \end{tabular}
     \caption{NMI scores on additional datasets.}
     \label{table:nmi_additional}
 \end{table}
@@ -215,23 +215,23 @@ The original paper only tests the PIC algorithm on synthetic data and on imagery
 \begin{table}[h]
     \centering
     \begin{tabular}{|l|c|c|}
-    \hline
-    \textit{CE} & \textbf{Iris} & \textbf{Breast Cancer} \\
-    \hline
-    \textbf{PIC}       & \textbf{0.016} & 0.269 \\ \hline
-    \textbf{k-med}     & 0.534 & 0.373 \\ \hline
-    \textbf{A-link}    & 0.573 & 0.778 \\ \hline
-    \textbf{S-link}    & 0.779 & 0.833 \\ \hline
-    \textbf{C-link}    & 0.280 & 0.601 \\ \hline
-    \textbf{AP}        & 0.960 & 0.934 \\ \hline
-    \textbf{NCuts}     & 0.115 & 0.356 \\ \hline
-    \textbf{NJW}       & 0.033 & 0.269 \\ \hline
-    \textbf{CT}        & 0.493 & 0.615 \\ \hline
-    \textbf{Zell}      & 0.027 & 0.197 \\ \hline
-    \textbf{C-kernel}  & 0.129 & 0.269 \\ \hline
-    \textbf{D-kernel}  & 0.029 & \textbf{0.132} \\
-    \hline
-    \end{tabular}
+        \hline
+        \textit{CE} & \textbf{Iris} & \textbf{Breast Cancer} \\
+        \hline
+        \textbf{PIC}       & \textbf{0.093} & 0.181 \\ \hline
+        \textbf{k-med}     & 0.107 & \textbf{0.132} \\ \hline
+        \textbf{A-link}    & \textbf{0.093} & 0.337 \\ \hline
+        \textbf{S-link}    & 0.320 & 0.371 \\ \hline
+        \textbf{C-link}    & 0.160 & 0.337 \\ \hline
+        \textbf{AP}        & 0.487 & 0.801 \\ \hline
+        \textbf{NCuts}     & \textbf{0.093} & 0.174 \\ \hline
+        \textbf{NJW}       & -- & 0.374 \\ \hline
+        \textbf{CT}        & 0.433 & 0.178 \\ \hline
+        \textbf{Zell}      & \textbf{0.093} & 0.178 \\ \hline
+        \textbf{C-kernel}  & 0.120 & 0.265 \\ \hline
+        \textbf{D-kernel}  & 0.113 & 0.174 \\
+        \hline
+        \end{tabular}
     \caption{CE scores on additional datasets.}
     \label{table:ce_additional}
 \end{table}
@@ -239,30 +239,44 @@ The original paper only tests the PIC algorithm on synthetic data and on imagery
 \begin{table}[h]
     \centering
     \begin{tabular}{|l|c|c|}
-    \hline
-    \textit{Silhouette} & \textbf{Iris} & \textbf{Breast Cancer} \\
-    \hline
-    \textbf{PIC}       & \textbf{0.016} & 0.269 \\ \hline
-    \textbf{k-med}     & 0.534 & 0.373 \\ \hline
-    \textbf{A-link}    & 0.573 & 0.778 \\ \hline
-    \textbf{S-link}    & 0.779 & 0.833 \\ \hline
-    \textbf{C-link}    & 0.280 & 0.601 \\ \hline
-    \textbf{AP}        & 0.960 & 0.934 \\ \hline
-    \textbf{NCuts}     & 0.115 & 0.356 \\ \hline
-    \textbf{NJW}       & 0.033 & 0.269 \\ \hline
-    \textbf{CT}        & 0.493 & 0.615 \\ \hline
-    \textbf{Zell}      & 0.027 & 0.197 \\ \hline
-    \textbf{C-kernel}  & 0.129 & 0.269 \\ \hline
-    \textbf{D-kernel}  & 0.029 & \textbf{0.132} \\
-    \hline
-    \end{tabular}
+        \hline
+        \textit{Silhouette} & \textbf{Iris} & \textbf{Breast Cancer} \\
+        \hline
+        \textbf{PIC}       & \textbf{0.554} & 0.401 \\ \hline
+        \textbf{k-med}     & 0.553 & 0.692 \\ \hline
+        \textbf{A-link}    & \textbf{0.554} & 0.691 \\ \hline
+        \textbf{S-link}    & 0.512 & \textbf{0.799} \\ \hline
+        \textbf{C-link}    & 0.514 & 0.691 \\ \hline
+        \textbf{AP}        & 0.347 & 0.391 \\ \hline
+        \textbf{NCuts}     & 0.552 & 0.408 \\ \hline
+        \textbf{NJW}       & -- & 0.247 \\ \hline
+        \textbf{CT}        & -0.052 & 0.405 \\ \hline
+        \textbf{Zell}      & 0.551 & 0.405 \\ \hline
+        \textbf{C-kernel}  & 0.550 & 0.304 \\ \hline
+        \textbf{D-kernel}  & 0.553 & 0.408 \\
+        \hline
+        \end{tabular}
     \caption{Silhouette scores on additional datasets.}
     \label{table:silhouette_additional}
 \end{table}
 
-Fill with true values. Comment results. Ref to Tables.
+Comment results.
 
-Add Silhouette plots.
+\begin{figure*}[htb]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/Iris.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../results/plots/Breast-Cancer.png}
+    \end{subfigure}
+
+    \caption{Clustering results on the three Synthetic Datasets (NMI scores in parentheses).}
+    \label{fig:silhouette}
+\end{figure*}
 
 \subsubsection{Scalability Analysis}
 

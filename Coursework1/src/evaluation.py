@@ -355,15 +355,15 @@ def plot_clustering_algorithms(X, y_true, n_clusters, y_pred_pic, plots_path):
         except Exception as e:
             print(f"Error with {name}: {e}")
 
-def plot_silhouette(X, y_pred, n_clusters, plot_path):
-    """Create a silhouette plot for the given clustering results."""
+def plot_silhouette(X, y_pred, n_clusters, plot_path, dataset):
+    """Create a compact silhouette plot for display in an article."""
 
     silhouette_avg = silhouette_score(X, y_pred)
     sample_silhouette_values = silhouette_samples(X, y_pred)
 
-    fig, ax1 = plt.subplots(1, 1)
-    fig.set_size_inches(10, 6)
-
+    fig, ax1 = plt.subplots(figsize=(6, 4), dpi=100)  # Smaller figure size
+    
+    # Set the axis limits
     ax1.set_xlim([-0.1, 1])
     ax1.set_ylim([0, len(X) + (n_clusters + 1) * 10])
 
@@ -376,15 +376,26 @@ def plot_silhouette(X, y_pred, n_clusters, plot_path):
         y_upper = y_lower + size_cluster_i
 
         color = cm.nipy_spectral(float(i) / n_clusters)
-        ax1.fill_betweenx(np.arange(y_lower, y_upper), 0, ith_cluster_silhouette_values, facecolor=color, edgecolor=color, alpha=0.7)
+        ax1.fill_betweenx(np.arange(y_lower, y_upper), 0, ith_cluster_silhouette_values, 
+                         facecolor=color, edgecolor=color, alpha=0.7)
 
-        ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i))
+        # Make cluster label more compact
+        if size_cluster_i > 30:  # Only add text if cluster is large enough
+            ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i), fontsize=8)
+        
         y_lower = y_upper + 10
 
-    ax1.axvline(x=silhouette_avg, color="red", linestyle="--")
-    ax1.set_title("Silhouette Plot")
-    ax1.set_xlabel("Silhouette coefficient values")
-    ax1.set_ylabel("Cluster label")
-
-    plt.savefig(plot_path)
+    # Add average silhouette line
+    ax1.axvline(x=silhouette_avg, color="red", linestyle="--", linewidth=1)
+    
+    # Add compact title and labels
+    ax1.set_title(f"Silhouette Plot ({dataset})", fontsize=10)
+    ax1.set_xlabel("Silhouette coefficient", fontsize=9)
+    ax1.set_ylabel("Cluster", fontsize=9)
+    
+    # Reduce tick size
+    ax1.tick_params(axis='both', which='major', labelsize=8)
+    
+    plt.tight_layout()  # Optimize layout
+    plt.savefig(plot_path, bbox_inches='tight')
     plt.close()
