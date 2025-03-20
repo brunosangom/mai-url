@@ -183,7 +183,7 @@ We evaluated the Silhouette scores of all algorithms on the image datasets, and 
     \label{table:silhouette}
 \end{table}
 
-Comment results.
+High Silhouette scores indicate cohesive (convex) and well-separated clusters. Therefore, the Silhouette scores reveal an interesting pattern: while PIC achieves outstanding NMI values, it doesn't consistently produce the highest Silhouette scores. This discrepancy actually highlights PIC's strength in identifying non-convex and complex cluster structures that better represent the true data distribution, even though such clusters may not appear as well-separated by internal convexity-based evaluation criteria like Silhouette.
 
 \subsubsection{Additional Datasets}
 The original paper only tests the PIC algorithm on synthetic data and on imagery datasets, we included as well the Iris and the Wisconsin Breast Cancer datasets. These widely-used benchmark datasets allow us to evaluate PIC's performance on lower-dimensional, well-structured data compared to the high-dimensional image datasets. The results are shown in Tables \ref{table:nmi_additional}, \ref{table:ce_additional}, and \ref{table:silhouette_additional}.
@@ -262,6 +262,8 @@ The original paper only tests the PIC algorithm on synthetic data and on imagery
 
 Comment results.
 
+Introduce Silhouette plots of PIC and reference Figure \ref{fig:silhouette}.
+
 \begin{figure*}[htb]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
@@ -274,7 +276,7 @@ Comment results.
         \includegraphics[width=\textwidth]{../results/plots/Breast-Cancer.png}
     \end{subfigure}
 
-    \caption{Clustering results on the three Synthetic Datasets (NMI scores in parentheses).}
+    \caption{Silhouette plots of PIC for the Iris and Breast Cancer datasets.}
     \label{fig:silhouette}
 \end{figure*}
 
@@ -289,7 +291,7 @@ Comment results.
     \textbf{\# of samples} & 5,139 & 9,298 & 600 & 150 & 569 \\ \hline
     \textbf{\# of clusters} & 5 & 10 & 6 & 3 & 2 \\ \hline
     \textbf{Dimensionality} & 784 & 256 & 4,200 & 4 & 30 \\ \hline
-    \textbf{PIC Runtime (s)} & 256.1 & 854.7 & 1.5 & 0 & 0 \\ \hline
+    \textbf{PIC Runtime (s)} & 256.1 & 854.7 & 1.5 & 0.3 & 4.2 \\ \hline
     \end{tabular}
     \caption{Runtime of PIC on different datasets with varying sizes and dimensionalities.}
     \label{table:time}
