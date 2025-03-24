@@ -14,11 +14,13 @@
 
 \begin{document}
 
+\twocolumn[
 \maketitle
-
 \begin{abstract}
-Your abstract here.
+    This report presents a comprehensive reproduction of the Path Integral Clustering (PIC) algorithm introduced by Zhang et al \cite{PIC}. PIC leverages concepts from statistical physics to effectively cluster data with complex manifold structures by measuring connectivity through path integrals. We implement the algorithm and evaluate it against eleven state-of-the-art clustering methods on both synthetic and real-world imagery datasets (MNIST, USPS, and Caltech-256). Our experiments confirm PIC's exceptional performance, achieving the highest Normalized Mutual Information scores on MNIST ($0.940$) and Caltech-256 ($0.653$), while showing competitive results on USPS. We extend the evaluation to include additional datasets (Iris and Breast Cancer) and metrics (Silhouette score), providing insights into PIC's strengths with non-convex clusters. Scalability analysis reveals that PIC's runtime increases primarily with sample count rather than dimensionality. Despite some reproduction challenges due to implementation ambiguities, our results validate PIC as a significant advancement in clustering methodology, particularly for datasets with complex structures.
 \end{abstract}
+\vspace{2em}
+]
 
 \input{sections/introduction}
 

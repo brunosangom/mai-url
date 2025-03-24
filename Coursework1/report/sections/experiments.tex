@@ -60,12 +60,12 @@ Figure \ref{fig:synthetic} shows the clustering results on these synthetic datas
 The results demonstrate PIC's ability to handle complex data structures. Particularly noteworthy is PIC's performance on Dataset 1, where it successfully identified both the dense clusters and the circular pattern despite the presence of noise. For Dataset 2, PIC effectively captured the sinusoidal and non-convex patterns, outperforming traditional algorithms that typically prefer convex clusters. Dataset 3 showcases PIC's robustness to noise, accurately separating the two main clusters from the surrounding noise.
 
 \subsection{Imagery Datasets}
-We evaluated PIC and 11 other clustering algorithms on three widely used image datasets:
+We evaluated PIC and 11 other clustering algorithms \cite{ap,ckernel,ct,kmedoids,ncuts,njw,zell} on three widely used image datasets:
 
 \begin{enumerate}
     \item \textbf{MNIST}: Handwritten digits (0-4), with 5,139 samples and 784 dimensions (28$\times$28 pixels).
     \item \textbf{USPS}: Handwritten digits (0-9), with 9,298 samples and 256 dimensions (16$\times$16 pixels).
-    \item \textbf{Caltech-256}: Reduced to six classes (hibiscus, ketch-101, leopards-101, motorbikes-101, airplanes-101, and faces-easy-101), with 600 samples and 4,200 dimensions (60$\times$70 grayscale images).
+    \item \textbf{Caltech-256}: Reduced to six classes (hibiscus, ketch-101, leopards-101, motorbikes-101, airplanes-101, and faces-easy-101), with 600 samples and 4,200 dimensions (60$\times$70 grayscale images) \cite{caltech256}.
 \end{enumerate}
 
 \begin{table}[h]
