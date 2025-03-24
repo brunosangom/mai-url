@@ -154,7 +154,7 @@ Despite these challenges, our implementation successfully reproduced the main fi
 \subsection{Additional Experiments}
 To further evaluate PIC's performance beyond the original paper's scope, we conducted additional experiments focusing on different evaluation criteria and datasets, and an analysis on the algorithm's scalability. These experiments aim to provide a more comprehensive understanding of PIC's strengths and limitations across varied clustering scenarios.
 
-\subsubsection{Additional Evaluation Criteria}
+\subsubsection{Additional Evaluation Criterion}
 In the original experiments, only external evaluation criteria are used (NMI and CE). We propose to include an internal evaluation metric to provide a more comprehensive assessment of clustering quality. We chose the Silhouette score due to its ability to measure both cluster cohesion and separation, as well as being well-suited for visualization purposes.
 
 We evaluated the Silhouette scores of all algorithms on the image datasets, and the results are shown in Table \ref{table:silhouette}.
@@ -260,9 +260,9 @@ The original paper only tests the PIC algorithm on synthetic data and on imagery
     \label{table:silhouette_additional}
 \end{table}
 
-Comment results.
+The results show that PIC achieves the best NMI, CE and Silhouette scores in Iris (tied with A-link), while also delivering competitive results in Breast Cancer. This demonstrates the algorithm's versatility and effectiveness across different types of datasets.
 
-Introduce Silhouette plots of PIC and reference Figure \ref{fig:silhouette}.
+To further analyze the behavior of PIC on the additional datasets, we display the corresponding Silhouette plots in Figure \ref{fig:silhouette}.
 
 \begin{figure*}[htb]
     \centering
@@ -280,23 +280,26 @@ Introduce Silhouette plots of PIC and reference Figure \ref{fig:silhouette}.
     \label{fig:silhouette}
 \end{figure*}
 
-\subsubsection{Scalability Analysis}
+The Silhouette plots provide a visual representation of the clustering quality. In the Iris dataset, the clusters are well-separated and have high cohesion, resulting in high Silhouette scores. In contrast, the Breast Cancer dataset exhibits less consistent Silhouette scores, likely due to the presence of overlapping clusters and lower cohesion. These results highlight the importance of considering both internal and external evaluation metrics to gain a comprehensive understanding of a clustering algorithm's behavior.
 
-\begin{table*}[h]
-    \centering
-    \begin{tabular}{|l|c|c|c|c|c|}
-    \hline
-     & \textbf{MNIST} & \textbf{USPS} & \textbf{Caltech-256} & \textbf{Iris} & \textbf{Breast Cancer} \\
-    \hline
-    \textbf{\# of samples} & 5,139 & 9,298 & 600 & 150 & 569 \\ \hline
-    \textbf{\# of clusters} & 5 & 10 & 6 & 3 & 2 \\ \hline
-    \textbf{Dimensionality} & 784 & 256 & 4,200 & 4 & 30 \\ \hline
-    \textbf{PIC Runtime (s)} & 256.1 & 854.7 & 1.5 & 0.3 & 4.2 \\ \hline
-    \end{tabular}
-    \caption{Runtime of PIC on different datasets with varying sizes and dimensionalities.}
-    \label{table:time}
-\end{table*}
+\subsubsection{Scalability Analysis}
 
 The original paper states that the PIC algorithm scales linearly with the number of clusters. However, it does not mention the algorithm's scalability with respect to the number of samples or dimensions. To investifate this, we recorded the runtime of PIC on each of the tested datasets, which have different number of samples, clusters and dimensions. The results are shown in Table \ref{table:time}.
 
-The results show that PIC's runtime does not seem to be affected by the dimensionality of the dataset in any significant way, since the Caltech-256 dataset has the highest number of dimensions and yet has the lowest runtime by a wide margin. However, the runtime does greatly increase with the number of samples, as seen in the MNIST and USPS datasets. The number of clusters could also have an impact, but it does not seem to be as significant as that of the number of samples.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|c|}
+    \hline
+    \textbf{Dataset} & \textbf{Samples} & \textbf{Clusters} & \textbf{Dims} & \textbf{Time (s)} \\
+    \hline
+    \textbf{USPS} & 9,298 & 10 & 256 & 645.0 \\ \hline
+    \textbf{MNIST} & 5,139 & 5 & 784 & 188.4 \\ \hline
+    \textbf{B-C} & 569 & 2 & 30 & 4.2 \\ \hline
+    \textbf{Caltech} & 600 & 6 & 4,200 & 1.1 \\ \hline
+    \textbf{Iris} & 150 & 3 & 4 & 0.3 \\ \hline
+    \end{tabular}
+    \caption{Runtime of PIC on different datasets with varying sizes and dimensionalities, ordered by time.}
+    \label{table:time}
+\end{table}
+
+The results show that PIC's runtime does not seem to be affected by the dimensionality of the dataset in any significant way, since the Caltech-256 dataset has the highest number of dimensions by a wide margin and yet has the second lowest runtime. However, the runtime does greatly increase with the number of samples, as seen in the MNIST and USPS datasets. The number of clusters could also have an impact, but it does not seem to be as significant as that of the number of samples.
