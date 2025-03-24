@@ -1,2 +1,8 @@
 \section{Introduction}
-Introduce the study of this project.
+Clustering is a fundamental task in unsupervised learning that aims to partition data into groups where objects within the same cluster are more similar to each other than to those in other clusters. Despite numerous algorithms available, clustering remains challenging, particularly for data with complex manifold structures or non-convex clusters that traditional methods struggle to identify correctly.
+
+Path Integral Clustering (PIC) \cite{PIC} addresses these limitations by leveraging concepts from statistical physics to model the connectivity between data points through path integrals. This innovative approach enables effective clustering of data with arbitrary shapes by measuring how strongly connected pairs of points are through all possible paths between them, rather than relying solely on direct distances.
+
+This report reproduces and extends the experimental evaluation of PIC as introduced in the original paper by Zhang et al \cite{PIC}. We implement the algorithm and compare its performance against eleven state-of-the-art clustering methods on both synthetic datasets and real-world imagery datasets, including MNIST, USPS, and Caltech-256. Additionally, we extend the evaluation to new datasets and metrics to further assess PIC's capabilities and limitations.
+
+The remainder of this report is organized as follows: Section 2 presents the theoretical foundations and implementation details of the PIC algorithm. Section 3 describes our experimental setup, results, challenges encountered during reproduction, and additional experiments. Section 4 concludes with a summary of findings and potential directions for future work.
