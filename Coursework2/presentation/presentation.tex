@@ -1,4 +1,4 @@
-\documentclass[pdf]{beamer}
+\documentclass{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{cite}
 \usepackage{graphicx}
@@ -11,14 +11,15 @@
 \usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{xcolor}
-\usepackage{booktabs}
+\usepackage{booktabs} % For better tables
+\usepackage{bookmark} % Added to address rerunfilecheck warning
 
 % Beamer theme settings
 \usetheme{Madrid}
 \usecolortheme{default}
 
 \title{URL Coursework 2}
-\subtitle{StackGAN++: Realistic Image Synthesis with Stacked Generative Adversarial Networks}
+\subtitle{StackGAN++: Realistic Image Synthesis with Stacked Generative Adversarial Networks~\cite{stackgan++}}
 \author{Bruno Sánchez Gómez}
 \date{\today}
 
@@ -38,45 +39,99 @@
     \vskip0pt%
 }
 
+% Define a command for placeholder images for clarity
+\newcommand{\paperfigure}[3][width=\textwidth]{%
+    \begin{figure}%
+        \centering%
+        % \includegraphics[#1]{figures/#2.png}%
+        \caption{#3 (Source:~\cite{stackgan++})}%
+        \label{fig:#2}%
+    \end{figure}%
+}
+\newcommand{\papertable}[3][width=\textwidth]{%
+    \begin{figure}%
+        \centering%
+        % \includegraphics[#1]{figures/#2.png}%
+        \caption{#3 (Source:~\cite{stackgan++})}%
+        \label{tab:#2}%
+    \end{figure}%
+}
+
+
 \begin{document}
 
 \begin{frame}
     \titlepage
 \end{frame}
 
-
-\begin{frame}{Table of Contents}
-    \tableofcontents
-\end{frame}
-
 \section{Introduction}
+\begin{frame}{Table of Contents}
+    \tableofcontents[currentsection]
+\end{frame}
 
 \begin{frame}{Area of Research of the Paper}
-    \centering
-    \begin{minipage}{0.8\textwidth}
-        \begin{block}{Definition}
-            \centering
-            More specific than Unsupervised Learning.
-        \end{block}
-    \end{minipage}
-    \vspace{0.5cm}
+    \begin{block}{Generative Adversarial Networks (GANs) for Realistic Image Synthesis}
+        This paper focuses on generating high-quality, high-resolution images using GANs. Specifically, it addresses:
+    \end{block}
     \begin{itemize}
-        \item What is the problem that is addressed in the paper
-        \item \textbf{Applications?}
-            \begin{itemize}
-                \item .
-            \end{itemize}
-        \item \textbf{Approaches?}
-            \begin{itemize}
-                \item .
-            \end{itemize}
+        \item \textbf{Text-to-Image Synthesis:} Generating photo-realistic images from textual descriptions (e.g., "a red bird with a short beak").
+        \item \textbf{Conditional Image Generation:} Creating images based on various conditions, including text or class labels.
+        \item \textbf{Unconditional Image Generation:} Synthesizing diverse images from random noise, learning the underlying data distribution.
+    \end{itemize}
+    \vspace{0.5cm}
+    The core approach involves \textbf{Stacked/Multi-Stage GAN architectures} to progressively refine images from low to high resolution (e.g., up to 256x256 pixels).
+\end{frame}
+
+\begin{frame}{Problem Addressed}
+    \begin{itemize}
+        \item \textbf{Generating High-Resolution Images:}
+        \begin{itemize}
+            \item Training GANs for high-resolution (e.g., 256x256) images is notoriously difficult and unstable.
+            \item High-dimensional image spaces make it hard for model and data distributions to overlap, leading to poor gradients.
+        \end{itemize}
+        \item \textbf{GAN Training Instability:}
+        \begin{itemize}
+            \item GANs are sensitive to hyperparameters and can suffer from non-convergence.
+        \end{itemize}
+        \item \textbf{Mode Collapse:}
+        \begin{itemize}
+            \item Generators often produce a limited variety of samples, failing to capture the full diversity of the training data.
+        \end{itemize}
+        \item \textbf{Limitations of Prior Work:}
+        \begin{itemize}
+            \item Most previous methods were limited to low-resolution images.
+            \item Achieving higher resolutions often required strong supervision beyond text (e.g., object part locations).
+            \item Super-resolution techniques could only add minor details and couldn't fix major defects in low-resolution inputs.
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{StackGAN++~\cite{stackgan++}}
-    \begin{itemize}
-        \item \textbf{StackGAN++:} What is the contribution of the paper. Basically, what is proposed on the paper that previous research does not address or what is the improvement
-    \end{itemize}
+\begin{frame}{Contributions: StackGAN \& StackGAN++}
+    The paper introduces two main frameworks:
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{StackGAN-v1:}
+            \begin{itemize}
+                \item A two-stage GAN for text-to-image synthesis generating 256x256 photo-realistic images.
+                    \begin{itemize}
+                        \item Stage-I: Low-resolution sketch (64x64).
+                        \item Stage-II: High-resolution refinement (256x256), correcting defects.
+                    \end{itemize}
+                \item \textbf{Conditioning Augmentation (CA):} A novel technique to stabilize conditional GAN training and improve sample diversity by creating smoother conditioning manifolds.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{StackGAN-v2:}
+            \begin{itemize}
+                \item An advanced multi-stage GAN for both conditional and unconditional generation.
+                \item \textbf{Tree-like Structure:} Multiple generators and discriminators for different image scales.
+                \item \textbf{Joint Approximation of Multiple Distributions:} Stabilizes training by modeling related distributions at different scales.
+                \item \textbf{Color-Consistency Regularization:} Ensures coherence across scales, especially for unconditional tasks.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \vspace{0.3cm}
+    \textbf{Overall Impact:} Significantly advances GANs' ability to generate high-resolution, photo-realistic images by decomposing the task into manageable sub-problems.
 \end{frame}
 
 \section{StackGAN++ Methodology}
@@ -84,32 +139,178 @@
     \tableofcontents[currentsection]
 \end{frame}
 
-\begin{frame}{Components of StackGAN++}
-    \begin{figure}
-        \centering
-        % \includegraphics[width=0.75\textwidth]{figures/inference_process.png}
-    \end{figure}
+\begin{frame}{StackGAN-v1: Two-Stage Text-to-Image Synthesis}
+    \textbf{Core Idea:} Decompose text-to-image generation into a sketch-refinement process.
+    \paperfigure[width=0.9\textwidth]{fig1_stackgan_v1}{StackGAN-v1 Architecture}
     \begin{itemize}
-        \item What are the minimum details that are necessary to understand how the proposed method works
+        \item \textbf{Stage-I GAN:}
+            \begin{itemize}
+                \item Input: Text description `t` + noise `z`.
+                \item Uses \textbf{Conditioning Augmentation (CA)} on text embedding `$\phi_t$` to get `ĉ$\phantom{.}_0$`. CA samples `ĉ$\phantom{.}_0$` from `N($\mu_0$($\phi_t$), $\Sigma_0$($\phi_t$))`, adding KL divergence regularization.
+                \item Generator `G$\phantom{.}_0$`: Produces a low-resolution image (64x64) focusing on rough shapes and colors.
+                \item Discriminator `D$\phantom{.}_0$`: Distinguishes real image-text pairs from fake ones.
+            \end{itemize}
+        \item \textbf{Stage-II GAN:}
+            \begin{itemize}
+                \item Input: Stage-I image + text `t` (again via CA to get `ĉ`).
+                \item Generator `G`: An encoder-decoder with residual blocks. Upsamples Stage-I result to high-resolution (256x256), correcting defects and adding details.
+                \item Discriminator `D`: Distinguishes real high-res image-text pairs from fake ones.
+            \end{itemize}
+        \item Both discriminators are "matching-aware".
     \end{itemize}
 \end{frame}
+
+\begin{frame}{StackGAN-v2: Multi-Stage General Image Synthesis}
+    \textbf{Core Idea:} A more general, end-to-end multi-stage framework with a tree-like structure.
+    \paperfigure[width=0.9\textwidth]{fig2_stackgan_v2}{StackGAN-v2 Architecture for Conditional Synthesis}
+    \begin{itemize}
+        \item \textbf{Tree-like Structure:}
+            \begin{itemize}
+                \item Input: Noise `z` (unconditional) or `(z, c)` (conditional, `c` is e.g., text embedding).
+                \item Multiple generators (`$G_0$, $G_1$, $G_z$`) produce images at increasing scales (e.g., 64x64, 128x128, 256x256).
+                \item Each `G$\phantom{.}_i$` has a corresponding discriminator `D$\phantom{.}_i$`.
+            \end{itemize}
+        \item \textbf{Joint Multi-Distribution Approximation:}
+            \begin{itemize}
+                \item Generators are jointly trained to approximate image distributions at multiple scales.
+                \item For conditional tasks, discriminators `D$\phantom{.}_i$` have both unconditional (real vs fake image) and conditional (image-condition match vs mismatch) loss terms.
+            \end{itemize}
+        \item \textbf{Color-Consistency Regularization:}
+            \begin{itemize}
+                \item Encourages images generated at different scales from the same input to have similar color statistics (mean, covariance). Crucial for unconditional tasks.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
 
 \section{Results}
 \begin{frame}{Table of Contents}
     \tableofcontents[currentsection]
 \end{frame}
 
-\begin{frame}{Results}
+\begin{frame}{Experimental Setup}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Datasets:}
+            \begin{itemize}
+                \item \textit{Text-to-Image (Conditional):}
+                    \begin{itemize}
+                        \item CUB-200-2011 (Birds)
+                        \item Oxford-102 (Flowers)
+                        \item MS COCO (Challenging general scenes)
+                    \end{itemize}
+                \item \textit{Unconditional Generation:}
+                    \begin{itemize}
+                        \item LSUN (Bedroom, Church)
+                        \item ImageNet (Dog, Cat subsets)
+                    \end{itemize}
+            \end{itemize}
+            \papertable[width=0.9\textwidth]{table1_datasets}{Statistics of Datasets}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Evaluation Metrics:}
+            \begin{itemize}
+                \item \textbf{Inception Score (IS):} Measures image quality and diversity. Higher is better.
+                \item \textbf{Fréchet Inception Distance (FID):} Measures similarity between generated and real image distributions. Lower is better.
+                \item \textbf{Human Rank (HR):} User studies to assess perceptual quality and text-image alignment. Lower is better.
+                \item \textbf{t-SNE Visualizations:} To check for mode collapse and sample diversity.
+            \end{itemize}
+            \textbf{Competing Methods:}
+            \begin{itemize}
+                \item \textit{Text-to-Image:} GAN-INT-CLS, GAWWN.
+                \item \textit{Unconditional:} DCGAN, WGAN, EBGAN-PT, LSGAN, WGAN-GP.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Quantitative Results: Text-to-Image (StackGAN-v1)}
+    \textbf{StackGAN-v1 significantly outperforms prior text-to-image models.}
+    \papertable[width=\textwidth]{table2_stackgan_v1_comparison}{Comparison of StackGAN-v1 with GAN-INT-CLS and GAWWN}
     \begin{itemize}
-        \item How the method has been tested (datasets, procedures) and what other competing methods have been used for comparison and why.
-        \item Quantitative/Qualitative results?
+        \item \textbf{Higher Resolution:} StackGAN-v1 generates 256x256 images.
+        \item \textbf{Improved IS:} e.g., on CUB, StackGAN-v1 (3.70) vs. GAN-INT-CLS (2.88).
+        \item \textbf{Drastically Lower FID*:} FID* (on 64x64 resized images) shows better distribution matching. e.g., on CUB, StackGAN-v1 (35.11) vs. GAN-INT-CLS (68.79).
+        \item \textbf{Better Human Rank (HR):} Indicates more realistic and text-relevant images.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Ablation Studies}
+\begin{frame}{Qualitative Results: Text-to-Image}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{CUB Dataset (Birds):}
+            \paperfigure[width=\textwidth]{fig3_cub_examples}{StackGANs vs. GAWWN vs. GAN-INT-CLS on CUB}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Oxford-102 (Flowers) \& COCO:}
+            \paperfigure[width=\textwidth]{fig4_oxford_coco_examples}{StackGANs vs. GAN-INT-CLS on Oxford-102 and COCO}
+        \end{column}
+    \end{columns}
+    \vspace{0.2cm}
+    StackGAN-v1 and v2 produce much more detailed and realistic images compared to GAN-INT-CLS (64x64) and GAWWN (128x128, often blurry without part annotations).
+\end{frame}
+
+\begin{frame}{StackGAN-v2 vs. StackGAN-v1 \& Unconditional SOTA}
+    \papertable[width=\textwidth]{table3_v1_vs_v2}{Comparison of StackGAN-v1 and StackGAN-v2}
     \begin{itemize}
-        \item If it is the case, what experiments have been done to test the different elements that compose the proposed methods (they are usually called ablation studies)
+        \item \textbf{StackGAN-v2 often improves FID over StackGAN-v1}, e.g., CUB FID: 15.30 (v2) vs 51.89 (v1).
+        \item \textbf{StackGAN-v2 IS generally higher or competitive.}
+        \item \textbf{Less Mode Collapse in StackGAN-v2:}
     \end{itemize}
+    \paperfigure[width=0.8\textwidth]{fig5_tsne_mode_collapse}{t-SNE: StackGAN-v1 (a) has collapsed modes, StackGAN-v2 (b) does not.}
+    \begin{itemize}
+        \item \textbf{Unconditional Generation:} StackGAN-v2 outperforms SOTA like DCGAN, WGAN-GP in quality and resolution (256x256).
+    \end{itemize}
+    \paperfigure[width=\textwidth]{fig6_unconditional_lsun}{Unconditional generation on LSUN Bedroom by various GANs and StackGANs.}
+\end{frame}
+
+\section{Ablation Studies}
+\begin{frame}{Table of Contents}
+    \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}{Ablation Studies: StackGAN-v1 Components}
+    \textbf{Testing importance of StackGAN-v1 design choices on CUB dataset (Table 4 in paper).}
+    \begin{itemize}
+        \item \textbf{Necessity of Stacked Structure:}
+            \begin{itemize}
+                \item Stage-I GAN direct 256x256 output: Poor IS (3.02) vs. StackGAN-v1 (3.70). Visually much worse (Fig. 11 in paper).
+            \end{itemize}
+        \item \textbf{Effect of Conditioning Augmentation (CA):}
+            \begin{itemize}
+                \item Stage-I GAN (64x64) IS: 2.66 (no CA) $\rightarrow$ 2.95 (with CA).
+                \item Without CA, 256x256 Stage-I GAN collapses (Fig. 11 in paper). CA stabilizes and improves diversity.
+            \end{itemize}
+        \item \textbf{Inputting Text at Both Stages ("Text twice"):}
+            \begin{itemize}
+                \item StackGAN-v1 256x256 IS: 3.45 (text only Stage-I) $\rightarrow$ 3.70 (text at both stages).
+                \item Stage-II benefits from re-processing text.
+            \end{itemize}
+    \end{itemize}
+    \paperfigure[width=0.9\textwidth]{fig10_stage1_vs_stage2}{Stage-I (rough sketch) vs. Stage-II (refined details) in StackGAN-v1.}
+\end{frame}
+
+\begin{frame}{Ablation Studies: StackGAN-v2 Components}
+    \textbf{Testing importance of StackGAN-v2 design choices on CUB (Table 5) and other datasets.}
+    \begin{itemize}
+        \item \textbf{Multi-Scale/Multi-Stage Architecture:}
+            \begin{itemize}
+                \item `StackGAN-v2-G3` (only final 256x256 generator): IS drops from 4.04 $\rightarrow$ 3.49.
+                \item `StackGAN-v2-all256` (all generators output 256x256): IS drops to 2.89.
+                \item Visuals (Fig. 14 in paper) show severe mode collapse or poor quality for these baselines.
+            \end{itemize}
+        \item \textbf{Joint Conditional/Unconditional (JCU) Discriminators:}
+            \begin{itemize}
+                \item `StackGAN-v2-no-JCU` (conventional conditional D): IS drops from 4.04 $\rightarrow$ 3.77.
+            \end{itemize}
+        \item \textbf{Color-Consistency Regularization:}
+            \begin{itemize}
+                \item Qualitatively (Fig. 15 in paper): Improves color consistency across scales for unconditional generation.
+                \item Quantitatively (ImageNet Dog): IS drops from 9.55 $\rightarrow$ 9.02 without it.
+                \item Not critical for text-to-image due to strong text conditioning.
+            \end{itemize}
+    \end{itemize}
+    \paperfigure[width=0.9\textwidth]{fig14_stackgan_v2_ablation_visuals}{(Bottom row) Visual comparison of StackGAN-v2 ablations on CUB.}
 \end{frame}
 
 \section{Analysis}
@@ -117,17 +318,79 @@
     \tableofcontents[currentsection]
 \end{frame}
 
-\begin{frame}{Pros \& Cons}
+\begin{frame}{Pros (Improvements over Competing Methods)}
     \begin{itemize}
-        \item What is the improvement over the competing methods
-        \item What are the limitations of the proposed method
+        \item \textbf{Achieves Higher Resolution (256x256) with Photo-Realism:}
+            \begin{itemize}
+                \item StackGAN-v1 was pioneering in generating 256x256 images from text, a significant leap from previous 64x64 or 128x128 results.
+            \end{itemize}
+        \item \textbf{Superior Image Quality and Diversity:}
+            \begin{itemize}
+                \item Consistently better IS, FID, and human preference scores compared to prior text-to-image methods (GAN-INT-CLS, GAWWN).
+                \item StackGAN-v2 further improves stability and quality (especially FID) over StackGAN-v1 and SOTA unconditional GANs.
+            \end{itemize}
+        \item \textbf{More Stable GAN Training:}
+            \begin{itemize}
+                \item Conditioning Augmentation (CA) in StackGAN-v1 stabilizes conditional GANs.
+                \item StackGAN-v2's joint multi-distribution approximation and tree structure lead to more stable training and reduced mode collapse.
+                \paperfigure[height=0.25\textheight]{fig5_tsne_mode_collapse}{StackGAN-v2 (b) shows less mode collapse than v1 (a).}
+            \end{itemize}
+        \item \textbf{General Framework (StackGAN-v2):}
+            \begin{itemize}
+                \item Applicable to both conditional (text-to-image, class-conditional) and unconditional image generation tasks.
+            \end{itemize}
+        \item \textbf{Ability to Correct Defects:} The multi-stage approach allows later stages to refine and correct errors or omissions from earlier stages.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Cons (Limitations of the Proposed Method)}
+    \begin{itemize}
+        \item \textbf{Failure Cases Still Exist:}
+            \begin{itemize}
+                \item While significantly improved, the methods can still produce imperfect images (e.g., blurry parts, unnatural shapes, minor artifacts), especially for complex text or scenes. StackGAN-v2 failures are generally "milder."
+                \paperfigure[height=0.25\textheight]{fig9_failure_cases}{Examples of failure cases from StackGAN-v1 (top) and StackGAN-v2 (bottom).}
+            \end{itemize}
+        \item \textbf{Convergence on Complex Datasets (StackGAN-v2):}
+            \begin{itemize}
+                \item StackGAN-v2's end-to-end joint training can be harder to converge on highly complex datasets (like COCO) compared to StackGAN-v1's simpler stage-by-stage optimization.
+                \item StackGAN-v1 sometimes yields slightly more appealing images on COCO by human rank, despite v2's better stability.
+            \end{itemize}
+        \item \textbf{Computational Cost:}
+            \begin{itemize}
+                \item Training multiple generators and discriminators in StackGAN-v2 is computationally intensive. StackGAN-v1, while two-stage, might have lower peak memory.
+            \end{itemize}
+        \item \textbf{Dependence on Text Embedding Quality:}
+            \begin{itemize}
+                \item The quality of generated images is highly dependent on the quality of the input text embeddings from the pre-trained text encoder.
+            \end{itemize}
+        \item \textbf{Subtle Mode Collapses:} While large-scale mode collapses are reduced, very subtle ones might still occur, and metrics like MS-SSIM are not good at detecting them.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Conclusions}
     \begin{itemize}
-        \item What conclusions can be taken after analysing the results
+        \item \textbf{Stacked/Multi-Stage GANs are Highly Effective:}
+            \begin{itemize}
+                \item Decomposing high-resolution image synthesis into progressive, manageable sub-problems (low-to-high resolution) is a key strategy for success.
+            \end{itemize}
+        \item \textbf{StackGAN-v1 Advanced Text-to-Image Synthesis:}
+            \begin{itemize}
+                \item First to achieve 256x256 photo-realistic images from text, with Conditioning Augmentation (CA) improving stability and diversity.
+            \end{itemize}
+        \item \textbf{StackGAN-v2 Offers Generality, Stability, and Quality:}
+            \begin{itemize}
+                \item Its tree-like architecture, joint multi-distribution approximation, and color-consistency regularization lead to more stable training, reduced mode collapse, and often higher quality for both conditional and unconditional tasks.
+            \end{itemize}
+        \item \textbf{Significant Progress in Realistic Image Generation:}
+            \begin{itemize}
+                \item The paper demonstrates a substantial leap in GANs' capability to generate detailed, high-resolution images.
+            \end{itemize}
+        \item \textbf{Future Directions:} Despite progress, achieving perfect realism, coherence for all inputs, and efficient training for extremely complex scenarios remain open challenges.
     \end{itemize}
+    \vspace{0.3cm}
+    \begin{block}{Personal Comment}
+        The StackGAN++ paper presents a compelling and intuitive approach to tackling the difficult problem of high-resolution image synthesis. The idea of progressive refinement is well-motivated and empirically validated. StackGAN-v2's generalization to unconditional tasks and its more robust training are particularly strong contributions, setting a new benchmark at the time. The detailed ablation studies thoroughly support the design choices.
+    \end{block}
 \end{frame}
 
 \begin{frame}{Q\&A}
@@ -140,7 +403,8 @@
 \end{frame}
 
 \begin{frame}[allowframebreaks]{References}
-    \bibliographystyle{unsrt} % Or choose another style like unsrt, alpha, etc.
+    \nocite{*} % To include all references from the .bib file, even if not explicitly cited in text (though StackGAN++ is cited)
+    \bibliographystyle{unsrt} 
     \bibliography{references}
 \end{frame}
 

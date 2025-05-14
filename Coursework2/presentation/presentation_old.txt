@@ -1,0 +1,147 @@
+\documentclass[pdf]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fontawesome}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+% Beamer theme settings
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\title{URL Coursework 2}
+\subtitle{StackGAN++: Realistic Image Synthesis with Stacked Generative Adversarial Networks}
+\author{Bruno Sánchez Gómez}
+\date{\today}
+
+\setbeamertemplate{footline}{%
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd=0.2\paperwidth,ht=2.5ex,dp=1.125ex,center]{author in head/foot}%
+            \hspace*{2mm}Bruno Sánchez Gómez
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=0.7\paperwidth,ht=2.5ex,dp=1.125ex,center]{title in head/foot}%
+            \insertshortsubtitle
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=0.1\paperwidth,ht=2.5ex,dp=1.125ex,center]{date in head/foot}%
+            \hspace*{-2mm}\insertframenumber{} / \inserttotalframenumber
+        \end{beamercolorbox}%
+    }%
+    \vskip0pt%
+}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+
+\begin{frame}{Table of Contents}
+    \tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Area of Research of the Paper}
+    \centering
+    \begin{minipage}{0.8\textwidth}
+        \begin{block}{Definition}
+            \centering
+            More specific than Unsupervised Learning.
+        \end{block}
+    \end{minipage}
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item What is the problem that is addressed in the paper
+        \item \textbf{Applications?}
+            \begin{itemize}
+                \item .
+            \end{itemize}
+        \item \textbf{Approaches?}
+            \begin{itemize}
+                \item .
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{StackGAN++~\cite{stackgan++}}
+    \begin{itemize}
+        \item \textbf{StackGAN++:} What is the contribution of the paper. Basically, what is proposed on the paper that previous research does not address or what is the improvement
+    \end{itemize}
+\end{frame}
+
+\section{StackGAN++ Methodology}
+\begin{frame}{Table of Contents}
+    \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}{Components of StackGAN++}
+    \begin{figure}
+        \centering
+        % \includegraphics[width=0.75\textwidth]{figures/inference_process.png}
+    \end{figure}
+    \begin{itemize}
+        \item What are the minimum details that are necessary to understand how the proposed method works
+    \end{itemize}
+\end{frame}
+
+\section{Results}
+\begin{frame}{Table of Contents}
+    \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}{Results}
+    \begin{itemize}
+        \item How the method has been tested (datasets, procedures) and what other competing methods have been used for comparison and why.
+        \item Quantitative/Qualitative results?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ablation Studies}
+    \begin{itemize}
+        \item If it is the case, what experiments have been done to test the different elements that compose the proposed methods (they are usually called ablation studies)
+    \end{itemize}
+\end{frame}
+
+\section{Analysis}
+\begin{frame}{Table of Contents}
+    \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}{Pros \& Cons}
+    \begin{itemize}
+        \item What is the improvement over the competing methods
+        \item What are the limitations of the proposed method
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusions}
+    \begin{itemize}
+        \item What conclusions can be taken after analysing the results
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Q\&A}
+    \centering
+    \Huge{Thank you for your attention!}
+
+    \vspace{0.5cm}
+
+    \Large{Any questions?}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+    \bibliographystyle{unsrt} % Or choose another style like unsrt, alpha, etc.
+    \bibliography{references}
+\end{frame}
+
+\end{document}
