@@ -254,28 +254,41 @@
 
 \begin{frame}{Conclusions}
     \begin{itemize}
-        \item \textbf{Stacked/Multi-Stage GANs are Highly Effective:}
-            \begin{itemize}
-                \item Decomposing high-resolution image synthesis into progressive, manageable sub-problems (low-to-high resolution) is a key strategy for success.
-            \end{itemize}
-        \item \textbf{StackGAN-v1 Advanced Text-to-Image Synthesis:}
-            \begin{itemize}
-                \item First to achieve 256x256 photo-realistic images from text, with Conditioning Augmentation (CA) improving stability and diversity.
-            \end{itemize}
-        \item \textbf{StackGAN-v2 Offers Generality, Stability, and Quality:}
-            \begin{itemize}
-                \item Its tree-like architecture, joint multi-distribution approximation, and color-consistency regularization lead to more stable training, reduced mode collapse, and often higher quality for both conditional and unconditional tasks.
-            \end{itemize}
-        \item \textbf{Significant Progress in Realistic Image Generation:}
-            \begin{itemize}
-                \item The paper demonstrates a substantial leap in GANs' capability to generate detailed, high-resolution images.
-            \end{itemize}
-        \item \textbf{Future Directions:} Despite progress, achieving perfect realism, coherence for all inputs, and efficient training for extremely complex scenarios remain open challenges.
+        \item \textbf{Stacked/Multi-Stage GANs} are highly effective
+        \item \textbf{Conditioning Augmentation} significantly improves sample diversity and training stability
+        \item \textbf{StackGAN-v1} succeeds in generating high-resolution images with photo-realistic details
+        \item \textbf{StackGAN-v2} improves robustness by jointly approximating:
+        \begin{enumerate}
+            \item Multi-scale image distributions
+            \item Conditional and unconditional image distributions
+        \end{enumerate}
+        \item \textbf{Quantitative and Qualitative Results} demonstrate superior performance over prior SOTA methods
+        \item \textbf{Ablation Studies} validate the effectiveness of each component
     \end{itemize}
-    \vspace{0.3cm}
-    \begin{block}{Personal Comment}
-        The StackGAN++ paper presents a compelling and intuitive approach to tackling the difficult problem of high-resolution image synthesis. The idea of progressive refinement is well-motivated and empirically validated. StackGAN-v2's generalization to unconditional tasks and its more robust training are particularly strong contributions, setting a new benchmark at the time. The detailed ablation studies thoroughly support the design choices.
+\end{frame}
+
+\begin{frame}{Personal Comments}
+    
+    \setbeamercolor{block title}{bg=red!20, fg=black}
+    \setbeamercolor{block body}{bg=red!5, fg=black}
+    \begin{block}{\textbf{Cons}}
+        \begin{itemize}
+            \item The authors \textbf{did not include StackGAN-v2 in the quantitative analysis} against SOTA methods
+            \item The improvement in \textbf{image quality} from the qualitative results is \textbf{not very significant}
+        \end{itemize}
     \end{block}
+    
+    \setbeamercolor{block title}{bg=green!20, fg=black}
+    \setbeamercolor{block body}{bg=green!5, fg=black}
+    \begin{block}{\textbf{Pros}}
+        \begin{itemize}
+            \item It mantains the \textbf{same level of quality} at \textbf{higher resolutions}
+            \item The idea of progressive refinement as a way to tackle high-resolution image synthesis is \textbf{well-motivated}, \textbf{intuitive}, and \textbf{empirically validated}
+        \end{itemize}
+    \end{block}
+    \begin{itemize}
+        \item The paper was published in 2018, and since then, there have been \textbf{many advancements} in the field of GANs (e.g. \textit{StyleGAN}~\cite{stylegan})
+    \end{itemize}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{References}
