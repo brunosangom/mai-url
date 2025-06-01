@@ -58,7 +58,7 @@
 
 \section{Introduction}
 \begin{frame}{Table of Contents}
-    \tableofcontents[currentsection]
+    \tableofcontents
 \end{frame}
 
 \begin{frame}{Introduction}
@@ -70,15 +70,7 @@
     \end{minipage}
     \vspace{1em}
     \begin{itemize}
-        \item \textbf{Limitations of Prior Work:}
-        \begin{itemize}
-            \item Training instability
-            \item Mode collapse
-            \item Difficulty in generating high-resolution images
-        \end{itemize}
-    \end{itemize}
-    \begin{itemize}
-        \item \textbf{StackGAN++} addresses:
+        \item \textbf{StackGAN++} focuses on:
         \begin{itemize}
             \item High-resolution images ($256 \times 256$ pixels)
             \item Two tasks:
@@ -86,6 +78,15 @@
                 \item \textit{Unconditional Image Generation}
                 \item \textit{Text-to-Image Synthesis} (Conditional Image Generation)
             \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    \pause
+    \begin{itemize}
+        \item \textbf{Limitations of prior work with GANs:}
+        \begin{itemize}
+            \item Training instability
+            \item Mode collapse
+            \item Difficulty in generating high-resolution images
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -103,7 +104,7 @@
 %   - High-dimensional image spaces make it hard for model and data distributions to overlap, leading to poor gradients.
 
 \begin{frame}{Contributions by StackGAN++}
-    \begin{enumerate}
+    \begin{itemize}
         \item \textbf{Conditioning Augmentation (CA):} Improve sample diversity by augmenting the image-text pairs.
         \vspace{1em}
         \item \textbf{StackGAN:} Two GAN frameworks for conditional and unconditional image synthesis with high resolution ($256 \times 256$):
@@ -113,7 +114,7 @@
             \vspace{0.25em}
             \item \textbf{StackGAN-v2:} Multi-stage GAN with a tree-like structure
         \end{itemize}
-    \end{enumerate}
+    \end{itemize}
 \end{frame}
 
 \section{StackGAN++ Methodology}
@@ -144,8 +145,6 @@
     \end{itemize}  
 \end{frame}
 
-% The input to the second stage is a 64x64 image from the first stage, along with the text embedding (conditioning), instead of noise
-
 \begin{frame}{StackGAN-v1}
     \centering
     \begin{minipage}{0.8\textwidth}
@@ -156,6 +155,8 @@
     \end{minipage}
     \paperfigure[width=0.9\textwidth]{stackgan_v1}{StackGAN-v1 Architecture}
 \end{frame}
+
+% The input to the second stage is a 64x64 image from the first stage, along with the text embedding (conditioning), instead of noise
 
 \begin{frame}{StackGAN-v2}
     \centering
@@ -178,16 +179,26 @@
 \end{frame}
 
 \begin{frame}{Experimental Setup}
-    % Datasets Table
     \centering
-    \begin{tabular}{|p{0.15\textwidth}|p{0.2\textwidth}|p{0.55\textwidth}|}
+    \begin{tabular}{|p{0.15\textwidth}|p{0.23\textwidth}|p{0.22\textwidth}|}
         \hline
-        \multirow{6}{0.15\textwidth}{\textbf{Datasets}} & \multirow{2}{0.2\textwidth}{\textit{Unconditional}} & LSUN (Bedroom, Church) \\
-                                                        &                                                     & ImageNet (Dog, Cat subsets) \\\cline{2-3}
-                                                        & \multirow{4}{0.2\textwidth}{\textit{Conditional}}   & \multirow{4}{0.55\textwidth}{CUB-200-2011 (Birds) \newline Oxford-102 (Flowers) \newline MS COCO (Challenging general scenes)} \\
-                                                        &                                                     & \\
-                                                        &                                                     & \\
-                                                        &                                                     & \\
+        & \textbf{Unconditional} & \textbf{Conditional} \\
+        \hline
+        \multirow{4}{0.15\textwidth}{\textbf{Datasets}} 
+            & \multirow{4}{0.25\textwidth}{LSUN \newline ImageNet}
+            & \multirow{4}{0.25\textwidth}{CUB-200-2011 \newline Oxford-102 \newline MS COCO} \\
+        & & \\
+        & & \\
+        & & \\
+        \hline
+        \multirow{6}{0.15\textwidth}{\textbf{Competing Methods}} 
+            & \multirow{6}{0.25\textwidth}{DCGAN \newline WGAN \newline EBGAN-PT \newline LSGAN \newline WGAN-GP}
+            & \multirow{6}{0.25\textwidth}{GAN-INT-CLS \newline GAWWN} \\
+        & & \\
+        & & \\
+        & & \\
+        & & \\
+        & & \\
         \hline
     \end{tabular}
     \vspace{1em}
@@ -199,18 +210,6 @@
         \multirow{3}{0.15\textwidth}{\textbf{Evaluation Metrics}} & \textit{Inception Score (IS)}             $\uparrow$ \\\cline{2-2}
                                                                   & \textit{Fréchet Inception Distance (FID)} $\downarrow$ \\\cline{2-2}
                                                                   & \textit{Human Rank (HR)}                  $\downarrow$ \\
-        \hline
-    \end{tabular}
-    \vspace{1em}
-
-    % Competing Methods Table
-    \centering
-    \begin{tabular}{|p{0.15\textwidth}|p{0.2\textwidth}|p{0.45\textwidth}|}
-        \hline
-        \multirow{4}{0.15\textwidth}{\textbf{Competing Methods}} & \multirow{2}{0.2\textwidth}{\textit{Unconditional}} & DCGAN, WGAN, EBGAN-PT, \\
-                                                                 &                                                     & LSGAN, WGAN-GP \\\cline{2-3}
-                                                                 & \multirow{2}{0.2\textwidth}{\textit{Conditional}}   & \multirow{2}{0.45\textwidth}{GAN-INT-CLS, GAWWN} \\
-                                                                 &                                                     & \\
         \hline
     \end{tabular}
 \end{frame}
@@ -275,6 +274,7 @@
     \setbeamercolor{block body}{bg=red!5, fg=black}
     \begin{block}{\textbf{Cons}}
         \begin{itemize}
+            \item \textbf{JCU Discriminators} could have also been used in \textbf{StackGAN-v1}
             \item The authors \textbf{did not include StackGAN-v2 in the quantitative analysis} against SOTA methods
             \item The improvement in \textbf{image quality} from the qualitative results is \textbf{not very significant}
         \end{itemize}
