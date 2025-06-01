@@ -62,43 +62,45 @@
 \end{frame}
 
 \begin{frame}{Introduction}
-    \begin{block}{Area of Research of the Paper}
-        \textbf{Generative Adversarial Networks} (GANs) for Realistic Image Synthesis
-    \end{block}
+    \centering
+    \begin{minipage}{0.9\textwidth}
+        \begin{block}{Area of Research of the Paper}
+            \textbf{Generative Adversarial Networks} (GANs) for Image Generation
+        \end{block}
+    \end{minipage}
+    \vspace{1em}
     \begin{itemize}
-        \item High-resolution images ($256 \times 256$ pixels)
-        \item Two tasks:
+        \item \textbf{Limitations of Prior Work:}
         \begin{itemize}
-            \item \textit{Unconditional Image Generation} % Synthesizing diverse images from random noise, learning the underlying data distribution.
-            \item \textit{Text-to-Image Synthesis} (Conditional Image Generation) % Generating photo-realistic images from textual descriptions (e.g., "a red bird with a short beak").
+            \item Training instability
+            \item Mode collapse
+            \item Difficulty in generating high-resolution images
         \end{itemize}
     \end{itemize}
-    \vspace{0.5cm}
-    \begin{figure}
-        \centering
-        % \paperfigure[width=0.8\textwidth]{fig0_stackgan_overview}{Image examples for unconditional and conditional image generation tasks.}
-    \end{figure}
+    \begin{itemize}
+        \item \textbf{StackGAN++} addresses:
+        \begin{itemize}
+            \item High-resolution images ($256 \times 256$ pixels)
+            \item Two tasks:
+            \begin{itemize}
+                \item \textit{Unconditional Image Generation}
+                \item \textit{Text-to-Image Synthesis} (Conditional Image Generation)
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Limitations of Prior Work}
-    \begin{itemize}
-        \item \textbf{GAN Training Instability:}
-        \begin{itemize}
-            \item Sensitive to hyperparameters
-            \item Can suffer from non-convergence
-        \end{itemize}
-        \item \textbf{Mode Collapse:}
-        \begin{itemize}
-            \item Limited variety of generated samples
-            \item Fail to capture full diversity of the training data
-        \end{itemize}
-        \item \textbf{Limited to low-resolution images:}
-        \begin{itemize}
-            \item Training GANs for high-resolution images is especially difficult and unstable.
-            \item Low overlap between model and data distributions $\rightarrow$ Poor gradients % High-dimensional image spaces make it hard for model and data distributions to overlap, leading to poor gradients.
-        \end{itemize}
-    \end{itemize}
-\end{frame}
+% GAN Training Instability:
+%   - Sensitive to hyperparameters
+%   - Can suffer from non-convergence
+
+% Mode Collapse:
+%   - Limited variety of generated samples
+%   - Fail to capture full diversity of the training data
+
+% Limited to low-resolution images:
+%   - Training GANs for high-resolution images is especially difficult and unstable.
+%   - High-dimensional image spaces make it hard for model and data distributions to overlap, leading to poor gradients.
 
 \begin{frame}{Contributions by StackGAN++}
     \begin{enumerate}
