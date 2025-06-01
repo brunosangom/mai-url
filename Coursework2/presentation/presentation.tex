@@ -142,6 +142,8 @@
     \end{itemize}  
 \end{frame}
 
+% The input to the second stage is a 64x64 image from the first stage, along with the text embedding (conditioning), instead of noise
+
 \begin{frame}{StackGAN-v1}
     \centering
     \begin{minipage}{0.8\textwidth}
@@ -164,6 +166,7 @@
     \paperfigure[width=0.9\textwidth]{stackgan_v2}{StackGAN-v2 Architecture and JCU Discriminators}
 \end{frame}
 
+% JCU (Joint Conditional/Unconditional) Discriminator: It predicts whether an image is real or fake, and whether the image matches the text condition or not
 % Generators are jointly trained to approximate image distributions at multiple scales, instead of being split into two stages
 % Color-Consistency Regularization: Encourages images generated at different scales from the same input to have similar color statistics (mean, covariance). Crucial for unconditional tasks
 
@@ -173,182 +176,80 @@
 \end{frame}
 
 \begin{frame}{Experimental Setup}
-    \begin{columns}[T]
-        \begin{column}{0.5\textwidth}
-            \textbf{Datasets:}
-            \begin{itemize}
-                \item \textit{Text-to-Image (Conditional):}
-                    \begin{itemize}
-                        \item CUB-200-2011 (Birds)
-                        \item Oxford-102 (Flowers)
-                        \item MS COCO (Challenging general scenes)
-                    \end{itemize}
-                \item \textit{Unconditional Generation:}
-                    \begin{itemize}
-                        \item LSUN (Bedroom, Church)
-                        \item ImageNet (Dog, Cat subsets)
-                    \end{itemize}
-            \end{itemize}
-            % \paperfigure[width=0.9\textwidth]{table1_datasets}{Statistics of Datasets}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \textbf{Evaluation Metrics:}
-            \begin{itemize}
-                \item \textbf{Inception Score (IS):} Measures image quality and diversity. Higher is better.
-                \item \textbf{Fréchet Inception Distance (FID):} Measures similarity between generated and real image distributions. Lower is better.
-                \item \textbf{Human Rank (HR):} User studies to assess perceptual quality and text-image alignment. Lower is better.
-                \item \textbf{t-SNE Visualizations:} To check for mode collapse and sample diversity.
-            \end{itemize}
-            \textbf{Competing Methods:}
-            \begin{itemize}
-                \item \textit{Text-to-Image:} GAN-INT-CLS, GAWWN.
-                \item \textit{Unconditional:} DCGAN, WGAN, EBGAN-PT, LSGAN, WGAN-GP.
-            \end{itemize}
-        \end{column}
-    \end{columns}
+    % Datasets Table
+    \centering
+    \begin{tabular}{|p{0.15\textwidth}|p{0.2\textwidth}|p{0.55\textwidth}|}
+        \hline
+        \multirow{6}{0.15\textwidth}{\textbf{Datasets}} & \multirow{2}{0.2\textwidth}{\textit{Unconditional}} & LSUN (Bedroom, Church) \\
+                                                        &                                                     & ImageNet (Dog, Cat subsets) \\\cline{2-3}
+                                                        & \multirow{4}{0.2\textwidth}{\textit{Conditional}}   & \multirow{4}{0.55\textwidth}{CUB-200-2011 (Birds) \newline Oxford-102 (Flowers) \newline MS COCO (Challenging general scenes)} \\
+                                                        &                                                     & \\
+                                                        &                                                     & \\
+                                                        &                                                     & \\
+        \hline
+    \end{tabular}
+    \vspace{1em}
+
+    % Evaluation Metrics Table
+    \centering
+    \begin{tabular}{|p{0.15\textwidth}|p{0.5\textwidth}|}
+        \hline
+        \multirow{3}{0.15\textwidth}{\textbf{Evaluation Metrics}} & \textit{Inception Score (IS)}             $\uparrow$ \\\cline{2-2}
+                                                                  & \textit{Fréchet Inception Distance (FID)} $\downarrow$ \\\cline{2-2}
+                                                                  & \textit{Human Rank (HR)}                  $\downarrow$ \\
+        \hline
+    \end{tabular}
+    \vspace{1em}
+
+    % Competing Methods Table
+    \centering
+    \begin{tabular}{|p{0.15\textwidth}|p{0.2\textwidth}|p{0.45\textwidth}|}
+        \hline
+        \multirow{4}{0.15\textwidth}{\textbf{Competing Methods}} & \multirow{2}{0.2\textwidth}{\textit{Unconditional}} & DCGAN, WGAN, EBGAN-PT, \\
+                                                                 &                                                     & LSGAN, WGAN-GP \\\cline{2-3}
+                                                                 & \multirow{2}{0.2\textwidth}{\textit{Conditional}}   & \multirow{2}{0.45\textwidth}{GAN-INT-CLS, GAWWN} \\
+                                                                 &                                                     & \\
+        \hline
+    \end{tabular}
 \end{frame}
 
-\begin{frame}{Quantitative Results: Text-to-Image (StackGAN-v1)}
-    \textbf{StackGAN-v1 significantly outperforms prior text-to-image models.}
-    % \paperfigure[width=\textwidth]{table2_stackgan_v1_comparison}{Comparison of StackGAN-v1 with GAN-INT-CLS and GAWWN}
-    \begin{itemize}
-        \item \textbf{Higher Resolution:} StackGAN-v1 generates 256x256 images.
-        \item \textbf{Improved IS:} e.g., on CUB, StackGAN-v1 (3.70) vs. GAN-INT-CLS (2.88).
-        \item \textbf{Drastically Lower FID*:} FID* (on 64x64 resized images) shows better distribution matching. e.g., on CUB, StackGAN-v1 (35.11) vs. GAN-INT-CLS (68.79).
-        \item \textbf{Better Human Rank (HR):} Indicates more realistic and text-relevant images.
-    \end{itemize}
+% Inception Score (IS): Measures image quality and diversity.
+% Fréchet Inception Distance (FID): Measures similarity between generated and real image distributions.
+% Human Rank (HR): User studies:
+    % 30 human users (who are not authors of the paper) are given the same text descriptions. 
+    % For each text description, they are shown the images generated by the different methods.
+    % The users are asked to rank the results (the generated images) from the different methods.
+
+\begin{frame}{Quantitative Results}
+    \paperfigure[width=\textwidth]{quantitative_results}{Tables of quantitative results}
+\end{frame}
+
+\begin{frame}{Qualitative Results: Unconditional Image Generation}
+    \paperfigure[width=\textwidth]{qualitative_results_unconditional}{Comparison of generated samples from LSUN Bedroom}
 \end{frame}
 
 \begin{frame}{Qualitative Results: Text-to-Image}
-    \begin{columns}[T]
-        \begin{column}{0.5\textwidth}
-            \textbf{CUB Dataset (Birds):}
-            % \paperfigure[width=\textwidth]{fig3_cub_examples}{StackGANs vs. GAWWN vs. GAN-INT-CLS on CUB}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \textbf{Oxford-102 (Flowers) \& COCO:}
-            % \paperfigure[width=\textwidth]{fig4_oxford_coco_examples}{StackGANs vs. GAN-INT-CLS on Oxford-102 and COCO}
-        \end{column}
-    \end{columns}
-    \vspace{0.2cm}
-    StackGAN-v1 and v2 produce much more detailed and realistic images compared to GAN-INT-CLS (64x64) and GAWWN (128x128, often blurry without part annotations).
+    \paperfigure[width=0.9\textwidth]{qualitative_results_conditional}{Comparison of generated samples with text descriptions from CUB}
 \end{frame}
 
-\begin{frame}{StackGAN-v2 vs. StackGAN-v1 \& Unconditional SOTA}
-    % \paperfigure[width=\textwidth]{table3_v1_vs_v2}{Comparison of StackGAN-v1 and StackGAN-v2}
-    \begin{itemize}
-        \item \textbf{StackGAN-v2 often improves FID over StackGAN-v1}, e.g., CUB FID: 15.30 (v2) vs 51.89 (v1).
-        \item \textbf{StackGAN-v2 IS generally higher or competitive.}
-        \item \textbf{Less Mode Collapse in StackGAN-v2:}
-    \end{itemize}
-    % \paperfigure[width=0.8\textwidth]{fig5_tsne_mode_collapse}{t-SNE: StackGAN-v1 (a) has collapsed modes, StackGAN-v2 (b) does not.}
-    \begin{itemize}
-        \item \textbf{Unconditional Generation:} StackGAN-v2 outperforms SOTA like DCGAN, WGAN-GP in quality and resolution (256x256).
-    \end{itemize}
-    % \paperfigure[width=\textwidth]{fig6_unconditional_lsun}{Unconditional generation on LSUN Bedroom by various GANs and StackGANs.}
+\begin{frame}{Limitations: StackGAN-v1 Mode Collapse}
+    \paperfigure[width=\textwidth]{mode_collapse}{StackGAN-v1 suffers from mode collapse}
 \end{frame}
 
-\section{Ablation Studies}
+\begin{frame}{Limitations: Failure Cases}
+    \paperfigure[width=\textwidth]{failure_cases}{Failure cases of both StackGAN-v1 and StackGAN-v2}
+\end{frame}
+
+\begin{frame}{Ablation Studies}
+    \paperfigure[width=0.5\textwidth]{ablation_v1}{Component analysis of StackGAN-v1}
+    \paperfigure[width=0.9\textwidth]{ablation_v2}{Component analysis of StackGAN-v2}
+\end{frame}
+
+% Both on the CUB dataset
+
+\section{Conclusions}
 \begin{frame}{Table of Contents}
     \tableofcontents[currentsection]
-\end{frame}
-
-\begin{frame}{Ablation Studies: StackGAN-v1 Components}
-    \textbf{Testing importance of StackGAN-v1 design choices on CUB dataset (Table 4 in paper).}
-    \begin{itemize}
-        \item \textbf{Necessity of Stacked Structure:}
-            \begin{itemize}
-                \item Stage-I GAN direct 256x256 output: Poor IS (3.02) vs. StackGAN-v1 (3.70). Visually much worse (Fig. 11 in paper).
-            \end{itemize}
-        \item \textbf{Effect of Conditioning Augmentation (CA):}
-            \begin{itemize}
-                \item Stage-I GAN (64x64) IS: 2.66 (no CA) $\rightarrow$ 2.95 (with CA).
-                \item Without CA, 256x256 Stage-I GAN collapses (Fig. 11 in paper). CA stabilizes and improves diversity.
-            \end{itemize}
-        \item \textbf{Inputting Text at Both Stages ("Text twice"):}
-            \begin{itemize}
-                \item StackGAN-v1 256x256 IS: 3.45 (text only Stage-I) $\rightarrow$ 3.70 (text at both stages).
-                \item Stage-II benefits from re-processing text.
-            \end{itemize}
-    \end{itemize}
-    % \paperfigure[width=0.9\textwidth]{fig10_stage1_vs_stage2}{Stage-I (rough sketch) vs. Stage-II (refined details) in StackGAN-v1.}
-\end{frame}
-
-\begin{frame}{Ablation Studies: StackGAN-v2 Components}
-    \textbf{Testing importance of StackGAN-v2 design choices on CUB (Table 5) and other datasets.}
-    \begin{itemize}
-        \item \textbf{Multi-Scale/Multi-Stage Architecture:}
-            \begin{itemize}
-                \item `StackGAN-v2-G3` (only final 256x256 generator): IS drops from 4.04 $\rightarrow$ 3.49.
-                \item `StackGAN-v2-all256` (all generators output 256x256): IS drops to 2.89.
-                \item Visuals (Fig. 14 in paper) show severe mode collapse or poor quality for these baselines.
-            \end{itemize}
-        \item \textbf{Joint Conditional/Unconditional (JCU) Discriminators:}
-            \begin{itemize}
-                \item `StackGAN-v2-no-JCU` (conventional conditional D): IS drops from 4.04 $\rightarrow$ 3.77.
-            \end{itemize}
-        \item \textbf{Color-Consistency Regularization:}
-            \begin{itemize}
-                \item Qualitatively (Fig. 15 in paper): Improves color consistency across scales for unconditional generation.
-                \item Quantitatively (ImageNet Dog): IS drops from 9.55 $\rightarrow$ 9.02 without it.
-                \item Not critical for text-to-image due to strong text conditioning.
-            \end{itemize}
-    \end{itemize}
-    % \paperfigure[width=0.9\textwidth]{fig14_stackgan_v2_ablation_visuals}{(Bottom row) Visual comparison of StackGAN-v2 ablations on CUB.}
-\end{frame}
-
-\section{Analysis}
-\begin{frame}{Table of Contents}
-    \tableofcontents[currentsection]
-\end{frame}
-
-\begin{frame}{Pros (Improvements over Competing Methods)}
-    \begin{itemize}
-        \item \textbf{Achieves Higher Resolution (256x256) with Photo-Realism:}
-            \begin{itemize}
-                \item StackGAN-v1 was pioneering in generating 256x256 images from text, a significant leap from previous 64x64 or 128x128 results.
-            \end{itemize}
-        \item \textbf{Superior Image Quality and Diversity:}
-            \begin{itemize}
-                \item Consistently better IS, FID, and human preference scores compared to prior text-to-image methods (GAN-INT-CLS, GAWWN).
-                \item StackGAN-v2 further improves stability and quality (especially FID) over StackGAN-v1 and SOTA unconditional GANs.
-            \end{itemize}
-        \item \textbf{More Stable GAN Training:}
-            \begin{itemize}
-                \item Conditioning Augmentation (CA) in StackGAN-v1 stabilizes conditional GANs.
-                \item StackGAN-v2's joint multi-distribution approximation and tree structure lead to more stable training and reduced mode collapse.
-                % \paperfigure[height=0.25\textheight]{fig5_tsne_mode_collapse}{StackGAN-v2 (b) shows less mode collapse than v1 (a).}
-            \end{itemize}
-        \item \textbf{General Framework (StackGAN-v2):}
-            \begin{itemize}
-                \item Applicable to both conditional (text-to-image, class-conditional) and unconditional image generation tasks.
-            \end{itemize}
-        \item \textbf{Ability to Correct Defects:} The multi-stage approach allows later stages to refine and correct errors or omissions from earlier stages.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Cons (Limitations of the Proposed Method)}
-    \begin{itemize}
-        \item \textbf{Failure Cases Still Exist:}
-            \begin{itemize}
-                \item While significantly improved, the methods can still produce imperfect images (e.g., blurry parts, unnatural shapes, minor artifacts), especially for complex text or scenes. StackGAN-v2 failures are generally "milder."
-                % \paperfigure[height=0.25\textheight]{fig9_failure_cases}{Examples of failure cases from StackGAN-v1 (top) and StackGAN-v2 (bottom).}
-            \end{itemize}
-        \item \textbf{Convergence on Complex Datasets (StackGAN-v2):}
-            \begin{itemize}
-                \item StackGAN-v2's end-to-end joint training can be harder to converge on highly complex datasets (like COCO) compared to StackGAN-v1's simpler stage-by-stage optimization.
-                \item StackGAN-v1 sometimes yields slightly more appealing images on COCO by human rank, despite v2's better stability.
-            \end{itemize}
-        \item \textbf{Computational Cost:}
-            \begin{itemize}
-                \item Training multiple generators and discriminators in StackGAN-v2 is computationally intensive. StackGAN-v1, while two-stage, might have lower peak memory.
-            \end{itemize}
-        \item \textbf{Dependence on Text Embedding Quality:}
-            \begin{itemize}
-                \item The quality of generated images is highly dependent on the quality of the input text embeddings from the pre-trained text encoder.
-            \end{itemize}
-        \item \textbf{Subtle Mode Collapses:} While large-scale mode collapses are reduced, very subtle ones might still occur, and metrics like MS-SSIM are not good at detecting them.
-    \end{itemize}
 \end{frame}
 
 \begin{frame}{Conclusions}
@@ -375,15 +276,6 @@
     \begin{block}{Personal Comment}
         The StackGAN++ paper presents a compelling and intuitive approach to tackling the difficult problem of high-resolution image synthesis. The idea of progressive refinement is well-motivated and empirically validated. StackGAN-v2's generalization to unconditional tasks and its more robust training are particularly strong contributions, setting a new benchmark at the time. The detailed ablation studies thoroughly support the design choices.
     \end{block}
-\end{frame}
-
-\begin{frame}{Q\&A}
-    \centering
-    \Huge{Thank you for your attention!}
-
-    \vspace{0.5cm}
-
-    \Large{Any questions?}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{References}
